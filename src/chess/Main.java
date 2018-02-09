@@ -19,7 +19,7 @@ public class Main extends JPanel{
 	    public void componentResized(ComponentEvent e) {
 	       	// Resize view when window resized
 	    	Dimension newSize = e.getComponent().getBounds().getSize(); 
-	    	model.setBoard(newSize.getWidth(),newSize.getHeight());
+	    	model.setBoardSize(newSize.getWidth(),newSize.getHeight());
 	    	
 	    }
 	}
@@ -27,7 +27,7 @@ public class Main extends JPanel{
 	Main() {
 		
         // Set up MVC
-		model = new ChessModel(700,600);
+		model = new ChessModel();
 		chessView = new ChessView(model);
 				
         // layout the views
@@ -45,8 +45,9 @@ public class Main extends JPanel{
         // create the window
         JFrame f = new JFrame("Chess"); 
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setSize(700, 600); 
+        f.setSize(1100, 800); 
         f.setContentPane(new Main()); 
-        f.setVisible(true); 
+        f.setVisible(true);
+        f.setResizable(false);
     }
 }
