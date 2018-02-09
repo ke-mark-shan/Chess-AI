@@ -1,4 +1,4 @@
 # Chess-AI
 
-# Notes:
-# Does not support castling and pawn promotion
+## Notes:
+######	 Does not support castling and pawn promotion
