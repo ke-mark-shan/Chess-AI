@@ -12,6 +12,11 @@ public class Pawn extends ChessPiece {
 		this.madeMove = false;
 	}
 		
+	@Override
+	public void setPosition(Pair<Integer,Integer> p){
+		super.setPosition(p);
+		this.madeMove = true;
+	}
 	public ArrayList<Pair<Integer,Integer>> getPossibleMoves(){
 
 		final int BOARD_SIZE = super.getModel().getBoard().BOARD_SIZE;
@@ -21,7 +26,7 @@ public class Pawn extends ChessPiece {
 
 		ArrayList<Pair<Integer,Integer>> moves = new ArrayList<Pair<Integer,Integer>>();
 		
-		if (1 <= y + direction && y + direction <= BOARD_SIZE){
+		if (this.getModel().inBoard(y + direction)){
 			// Movement forward
 			if (null == super.getModel().getBoard().getPiece(new Pair<Integer, Integer>(x, y + direction))){
 				// Can move one cell forward
@@ -34,14 +39,14 @@ public class Pawn extends ChessPiece {
 			}
 			
 			//Diagonal attacks
-			if (1 <= x - 1 && x - 1 <= BOARD_SIZE &&
+			if (this.getModel().inBoard(x - 1) &&
 					null != super.getModel().getBoard().getPiece(new Pair<Integer, Integer> (x - 1, y + direction)) &&
 					super.getPlayerColour() != super.getModel().getBoard().getPiece(new Pair<Integer, Integer>(x - 1, y + direction)).getPlayerColour()){
 				moves.add(new Pair<Integer,Integer>(x - 1,y + direction));
 				
 			}
 			
-			if (1 <= x + 1 && x + 1 <= BOARD_SIZE &&
+			if (this.getModel().inBoard(x + 1) &&
 					null != super.getModel().getBoard().getPiece(new Pair<Integer, Integer>(x + 1, y + direction)) &&
 					super.getPlayerColour() != super.getModel().getBoard().getPiece(new Pair<Integer, Integer>(x + 1, y + direction)).getPlayerColour()){
 				moves.add(new Pair<Integer,Integer>(x + 1,y + direction));

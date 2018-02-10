@@ -25,6 +25,10 @@ class Pair<A,B>{
 	public void setSecond(B b){
 		second = b;
 	}
+	
+	public boolean equals(Pair<A,B> other){
+		return (this.first == other.getFirst() && this.second == other.getSecond());
+	}
 }
 
 public abstract class ChessPiece {

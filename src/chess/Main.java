@@ -27,14 +27,11 @@ public class Main extends JPanel{
 	Main() {
 		
         // Set up MVC
-		model = new ChessModel();
+		model = new ChessModel(new Player(PlayerColour.WHITE), new Player(PlayerColour.BLACK));
 		chessView = new ChessView(model);
 				
         // layout the views
         setLayout(new BorderLayout());
-        
-        //// for getting key events into PlayView
-        //playView.requestFocusInWindow();
         
         this.addComponentListener(new ResizeListener());
         this.add(chessView);

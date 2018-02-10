@@ -6,9 +6,9 @@ public class Player {
 	private PlayerColour myColour;
 	public King king;
 	public Queen queen;
+	public ArrayList<Rook> rooks = new ArrayList<Rook>();
 	public ArrayList<Bishop> bishops = new ArrayList<Bishop>();
 	public ArrayList<Knight> knights = new ArrayList<Knight>();
-	public ArrayList<Rook> rooks = new ArrayList<Rook>();
 	public ArrayList<Pawn> pawns = new ArrayList<Pawn>();
 	
 	public Player(PlayerColour pc){
