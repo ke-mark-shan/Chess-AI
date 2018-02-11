@@ -102,6 +102,9 @@ public class ChessModel extends Observable{
 
 	//Probably should be using contains, seems like I gotta do hashcode as well tho
 	private boolean isHighlightedPos(Pair<Integer, Integer> pos){
+		if (this.highlightedPos == null){
+			return true;
+		}
 		for (Pair<Integer, Integer> hpos : this.highlightedPos){
 			if (pos.equals(hpos)){
 				return true;
@@ -122,9 +125,7 @@ public class ChessModel extends Observable{
 	public void selectPosition(Pair<Integer, Integer> pos){
 		
 		ChessPiece piece = this.chessBoard.getPiece(pos);
-		if (null != piece && piece.getPlayerColour() != this.turn){
-			return;
-		}
+		
 		
 		if (null != this.selectedPos){
 			if (this.selectedPos.equals(pos)){
@@ -136,6 +137,7 @@ public class ChessModel extends Observable{
 				this.movePiece(this.selectedPos,pos);
 				this.unselectPosition();
 				this.swapTurns();
+				System.out.println("Turn: " + this.turn);
 				return;
 			}
 			this.unselectPosition();
@@ -144,7 +146,10 @@ public class ChessModel extends Observable{
 		if (null == piece){
 			return;
 		}
-		
+		if ( piece.getPlayerColour() != this.turn){
+			System.out.println("Not their turn");
+			return;
+		}
 		this.selectedPos = pos;
 		this.chessBoard.setState(selectedPos, BoardCellState.SELECTED);
 		

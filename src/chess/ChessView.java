@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.Rectangle;
 import java.awt.event.*;
@@ -87,8 +88,8 @@ public class ChessView extends JPanel implements Observer {
    	 	final int BOARD_SIZE = this.model.getBoard().BOARD_SIZE;
    	 	final double CELL_SIZE = this.model.getBoardSize().getWidth() / BOARD_SIZE;
    	 	
-   	 	final Color SELECTED_COLOUR = Color.RED;
-   	 	final Color HIGHLIGHTED_COLOUR = new Color(255, 255, 204);
+   	 	final Color SELECTED_COLOUR = Color.BLUE;
+   	 	final Color HIGHLIGHTED_COLOUR = new Color(144, 238, 144);//new Color(255, 255, 204);
         Color[] tileColours = new Color[2];
         tileColours[0] = new Color(111,115,210);
         tileColours[1] = new Color(157,172,255);
@@ -109,15 +110,29 @@ public class ChessView extends JPanel implements Observer {
 						g2.setPaint(tileColours[(column + row) % 2]);	//Checker board pattern
 						break;
 					case SELECTED:
-						g2.setPaint(SELECTED_COLOUR);
+						g2.setPaint(tileColours[(column + row) % 2]);
 						break;
 					case HIGHLIGHTED:
-						g2.setPaint(HIGHLIGHTED_COLOUR);
+						//g2.setPaint(HIGHLIGHTED_COLOUR);
+						g2.setPaint(tileColours[(column + row) % 2]);
 						break;
 					default:
 						System.err.println("Unexpected state (" + column + ", " + row +"): " + this.model.getBoard().getState(pos));
 				}
 				g2.fill(new Rectangle2D.Double(CELL_SIZE * column, CELL_SIZE * row, CELL_SIZE,CELL_SIZE));
+				
+				switch (this.model.getBoard().getState(pos)){
+					case DEFAULT:
+						break;
+					case SELECTED:
+						break;
+					case HIGHLIGHTED:
+						g2.setPaint(HIGHLIGHTED_COLOUR);
+						g2.fillOval((int)(CELL_SIZE * (column + 0.25)), (int)(CELL_SIZE * (row + 0.25)), (int)CELL_SIZE / 2, (int)CELL_SIZE / 2);
+						break;
+					default:
+						System.err.println("Unexpected state (" + column + ", " + row +"): " + this.model.getBoard().getState(pos));
+				}
 				
 				// Draw chess piece if there is one
 				ChessPiece piece = this.model.getBoard().getPiece(pos);
