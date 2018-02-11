@@ -122,6 +122,7 @@ public class ChessModel extends Observable{
 		this.setChangedAndNotify();
 	}
 	
+	// Processes result of clicking a cell
 	public void selectPosition(Pair<Integer, Integer> pos){
 		
 		ChessPiece piece = this.chessBoard.getPiece(pos);
@@ -160,6 +161,31 @@ public class ChessModel extends Observable{
 		this.setChangedAndNotify();
 	}
 	
+	// returns the first ChessPiece of PlayerColour pc from start going in the direction of (dcol, drow)
+	private ChessPiece getFirstInDirection(PlayerColour pc, int startCol, int startRow, int dcol, int drow){
+		if (dcol == 0 && drow == 0){
+			System.err.println("Both dcol,drow are 0");
+			return null;
+		}
+		
+		while (true){
+			startCol += dcol;
+			startRow += drow;
+			
+			if (!this.inBoard(startCol) || !this.inBoard(startRow)){
+				return null;
+			}
+			else{
+				ChessPiece piece = this.chessBoard.getPiece(new Pair<Integer, Integer>(startCol, startRow));
+				
+				if (piece.getPlayerColour() == pc){
+					return piece;
+				}
+				return null;
+			}
+		}				
+	}
+	
 	// Returns whether the player with colour pc is in check
 	public boolean inCheck(PlayerColour pc){
 		
@@ -177,19 +203,83 @@ public class ChessModel extends Observable{
 		
 		//Look for all ways pc's king could be attacked
 		if (opponent.queen != null || opponent.rooks.size() > 0){
+			ChessPieceType firstUp = this.getFirstInDirection(myKing.getPlayerColour(), myKingCol, myKingRow, 0, 1).getType();
+			if (firstUp == ChessPieceType.QUEEN || firstUp == ChessPieceType.ROOK){
+				return true;
+			}
 			
+			ChessPieceType firstRight = this.getFirstInDirection(myKing.getPlayerColour(), myKingCol, myKingRow, 1, 0).getType();
+			if (firstRight == ChessPieceType.QUEEN || firstRight == ChessPieceType.ROOK){
+				return true;
+			}
+			
+			ChessPieceType firstDown = this.getFirstInDirection(myKing.getPlayerColour(), myKingCol, myKingRow, 0, -1).getType();
+			if (firstDown == ChessPieceType.QUEEN || firstDown == ChessPieceType.ROOK){
+				return true;
+			}
+			
+			ChessPieceType firstLeft = this.getFirstInDirection(myKing.getPlayerColour(), myKingCol, myKingRow, -1, 0).getType();
+
+			if (firstLeft == ChessPieceType.QUEEN || firstLeft == ChessPieceType.ROOK)
+			{
+				return true;
+			}
 		}
 		
 		if (opponent.queen != null || opponent.bishops.size() > 0){
+			ChessPieceType firstInDir = this.getFirstInDirection(myKing.getPlayerColour(), myKingCol, myKingRow, 1, 1).getType();
+			if (firstInDir == ChessPieceType.QUEEN || firstInDir == ChessPieceType.BISHOP){
+				return true;
+			}
 			
+			firstInDir = this.getFirstInDirection(myKing.getPlayerColour(), myKingCol, myKingRow, -1, 1).getType();
+			if (firstInDir == ChessPieceType.QUEEN || firstInDir == ChessPieceType.BISHOP){
+				return true;
+			}
+			
+			firstInDir = this.getFirstInDirection(myKing.getPlayerColour(), myKingCol, myKingRow, 1, -1).getType();
+			if (firstInDir == ChessPieceType.QUEEN || firstInDir == ChessPieceType.BISHOP){
+				return true;
+			}
+			
+			firstInDir = this.getFirstInDirection(myKing.getPlayerColour(), myKingCol, myKingRow, -1, -1).getType();
+			if (firstInDir == ChessPieceType.QUEEN || firstInDir == ChessPieceType.BISHOP){
+				return true;
+			}
 		}
 		
 		if (opponent.knights.size() > 0){
-			
+			for (Knight k : opponent.knights){
+				int knightCol = k.getPosition().getFirst();
+				int knightRow = k.getPosition().getSecond();
+				
+				if ((Math.abs(knightCol - myKingCol) == 1 && Math.abs(knightRow - myKingRow) == 2) ||
+					(Math.abs(knightCol - myKingCol) == 2 && Math.abs(knightRow - myKingRow) == 1)){
+					return true;
+				}
+			}
 		}
 		if (opponent.pawns.size() > 0){
+			// Check attacking pawn from the left
+			if (this.inBoard(myKingCol - 1) && this.inBoard(myKingRow - myKing.getDirectionMultiplier())){
+				ChessPiece checkPiece = this.chessBoard.getPiece(new Pair<Integer, Integer>(myKingCol - 1, myKingRow - myKing.getDirectionMultiplier()));
+				if (checkPiece.getPlayerColour() == opponent.getColour() &&
+					checkPiece.getType() == ChessPieceType.PAWN){
+					return true;
+				}
+			}
+			
+			// Check attacking pawn from the right
+			if (this.inBoard(myKingCol + 1) && this.inBoard(myKingRow - myKing.getDirectionMultiplier())){
+				ChessPiece checkPiece = this.chessBoard.getPiece(new Pair<Integer, Integer>(myKingCol + 1, myKingRow - myKing.getDirectionMultiplier()));
+				if (checkPiece.getPlayerColour() == opponent.getColour() &&
+					checkPiece.getType() == ChessPieceType.PAWN){
+					return true;
+				}
+			}
 			
 		}
+		
 		return false;
 	}
 	
