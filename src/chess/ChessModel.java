@@ -5,8 +5,8 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Observable;
 public class ChessModel extends Observable{
-	private Player player1;										//White
-	private Player player2;										//Black
+	private Player playerWhite;
+	private Player playerBlack;
 	private ChessBoard chessBoard;
 	private Rectangle2D boardDimensions;
 	private PlayerColour turn;
@@ -14,6 +14,7 @@ public class ChessModel extends Observable{
 	private ArrayList<Pair<Integer,Integer>> highlightedPos;	//Highlighted positions
 	
 	public ChessModel(Player p1, Player p2){
+		
 		boardDimensions = new Rectangle2D.Double(0,0,0,0);
 		this.initializeBoard(p1, p2);
 	}
@@ -28,6 +29,7 @@ public class ChessModel extends Observable{
 	}
 	
 	public void setBoardSize(double w, double h){
+		
 		//The game board will the largest square that could fit within the window
 		double boardWidth = Math.min(w,h);
 		boardDimensions = new Rectangle2D.Double(0, 0, boardWidth, boardWidth);
@@ -44,6 +46,7 @@ public class ChessModel extends Observable{
 	}
 	
 	public void swapTurns(){
+		
 		switch (this.turn){
 			case WHITE:
 				this.turn = PlayerColour.BLACK;
@@ -55,30 +58,72 @@ public class ChessModel extends Observable{
 	}
 
 	private void setupMainPieces(int row, PlayerColour pc){
-		this.chessBoard.setPiece(new Pair<Integer,Integer>(0, row), new Rook(this, pc, new Pair<Integer,Integer>(0, row)));
-		this.chessBoard.setPiece(new Pair<Integer,Integer>(1, row), new Knight(this, pc, new Pair<Integer,Integer>(1, row)));
-		this.chessBoard.setPiece(new Pair<Integer,Integer>(2, row), new Bishop(this, pc, new Pair<Integer,Integer>(2, row)));
-		this.chessBoard.setPiece(new Pair<Integer,Integer>(3, row), new Queen(this, pc, new Pair<Integer,Integer>(3, row)));
-		this.chessBoard.setPiece(new Pair<Integer,Integer>(4, row), new King(this, pc, new Pair<Integer,Integer>(4, row)));
-		this.chessBoard.setPiece(new Pair<Integer,Integer>(5, row), new Bishop(this, pc, new Pair<Integer,Integer>(5, row)));
-		this.chessBoard.setPiece(new Pair<Integer,Integer>(6, row), new Knight(this, pc, new Pair<Integer,Integer>(6, row)));
-		this.chessBoard.setPiece(new Pair<Integer,Integer>(7, row), new Rook(this, pc, new Pair<Integer,Integer>(7, row)));
+		
+		Player owner = this.playerWhite;
+		
+		if (pc == PlayerColour.BLACK){
+			owner = this.playerBlack;
+		}
+		
+		ChessPiece toAdd = new Rook(this, pc, new Pair<Integer,Integer>(0, row));
+		owner.rooks.add((Rook) toAdd);
+		this.chessBoard.setPiece(new Pair<Integer,Integer>(0, row), toAdd);
+		
+		toAdd = new Knight(this, pc, new Pair<Integer,Integer>(1, row));
+		owner.knights.add((Knight) toAdd);
+		this.chessBoard.setPiece(new Pair<Integer,Integer>(1, row), toAdd);
+		
+		toAdd = new Bishop(this, pc, new Pair<Integer,Integer>(2, row));
+		owner.bishops.add((Bishop) toAdd);
+		this.chessBoard.setPiece(new Pair<Integer,Integer>(2, row), toAdd);
+		
+		toAdd = new Queen(this, pc, new Pair<Integer,Integer>(3, row));
+		owner.queen = (Queen) toAdd;
+		this.chessBoard.setPiece(new Pair<Integer,Integer>(3, row), toAdd);
+		
+		toAdd = new King(this, pc, new Pair<Integer,Integer>(4, row));
+		owner.king = (King) toAdd;
+		this.chessBoard.setPiece(new Pair<Integer,Integer>(4, row), toAdd);
+		
+		toAdd = new Bishop(this, pc, new Pair<Integer,Integer>(5, row));
+		owner.bishops.add((Bishop) toAdd);
+		this.chessBoard.setPiece(new Pair<Integer,Integer>(5, row), toAdd);
+		
+		toAdd = new Knight(this, pc, new Pair<Integer,Integer>(6, row));
+		owner.knights.add((Knight) toAdd);
+		this.chessBoard.setPiece(new Pair<Integer,Integer>(6, row), toAdd);
+		
+		toAdd =  new Rook(this, pc, new Pair<Integer,Integer>(7, row));
+		owner.rooks.add((Rook) toAdd);
+		this.chessBoard.setPiece(new Pair<Integer,Integer>(7, row), toAdd);
 	}
 	
 	private void setupPawns(int row, PlayerColour pc){
-		int BOARD_SIZE = this.getBoard().BOARD_SIZE;
+		
+		final int BOARD_SIZE = this.getBoard().BOARD_SIZE;
+		
+		Pawn toAdd;
+		Player owner = this.playerWhite;
+		
+		if (pc == PlayerColour.BLACK){
+			owner = this.playerBlack;
+		}
+		
 		for (int column = 0; column < BOARD_SIZE; column++){
-			this.chessBoard.setPiece(new Pair<Integer,Integer>(column, row), new Pawn(this, pc, new Pair<Integer,Integer>(column, row)));
+			toAdd = new Pawn(this, pc, new Pair<Integer,Integer>(column, row));
+			owner.pawns.add(toAdd);
+			this.chessBoard.setPiece(new Pair<Integer,Integer>(column, row), toAdd);
 		}
 	}
 	
 	public void initializeBoard(Player p1, Player p2){
+		
 		this.chessBoard = new ChessBoard();
 		this.turn = PlayerColour.WHITE;
 		this.selectedPos = null;
 		this.highlightedPos = null;
-		this.player1 = p1;
-		this.player2 = p2;
+		this.playerWhite = p1;
+		this.playerBlack = p2;
 		
 		final int BOARD_SIZE = this.chessBoard.BOARD_SIZE;
 		
@@ -96,7 +141,6 @@ public class ChessModel extends Observable{
 		this.turn = PlayerColour.WHITE;
 		this.selectedPos = null;
 		
-		System.out.println("Chess Board Initialized");
 		setChangedAndNotify();
 	}
 
@@ -127,18 +171,19 @@ public class ChessModel extends Observable{
 		
 		ChessPiece piece = this.chessBoard.getPiece(pos);
 		
-		
 		if (null != this.selectedPos){
 			if (this.selectedPos.equals(pos)){
 				System.out.println("Unselecting Position");
 				this.unselectPosition();
+				this.setChangedAndNotify();
 				return;
 			}
 			else if(this.isHighlightedPos(pos)){
-				this.movePiece(this.selectedPos,pos);
+				this.movePiece(this.selectedPos, pos, true);
 				this.unselectPosition();
 				this.swapTurns();
 				System.out.println("Turn: " + this.turn);
+				this.setChangedAndNotify();
 				return;
 			}
 			this.unselectPosition();
@@ -161,24 +206,27 @@ public class ChessModel extends Observable{
 		this.setChangedAndNotify();
 	}
 	
-	// returns the first ChessPiece of PlayerColour pc from start going in the direction of (dcol, drow)
-	private ChessPiece getFirstInDirection(PlayerColour pc, int startCol, int startRow, int dcol, int drow){
-		if (dcol == 0 && drow == 0){
+	// returns the first ChessPiece of PlayerColour pc from start going in the direction of (dCol, dRow)
+	private ChessPiece getFirstInDirection(PlayerColour pc, int startCol, int startRow, int dCol, int dRow){
+		if (dCol == 0 && dRow == 0){
 			System.err.println("Both dcol,drow are 0");
 			return null;
 		}
 		
+		int currCol = startCol;
+		int currRow = startRow;
+		
 		while (true){
-			startCol += dcol;
-			startRow += drow;
+			currCol += dCol;
+			currRow += dRow;
 			
-			if (!this.inBoard(startCol) || !this.inBoard(startRow)){
+			if (!this.inBoard(currCol) || !this.inBoard(currRow)){
 				return null;
 			}
 			else{
-				ChessPiece piece = this.chessBoard.getPiece(new Pair<Integer, Integer>(startCol, startRow));
+				ChessPiece piece = this.chessBoard.getPiece(new Pair<Integer, Integer>(currCol, currRow));
 				
-				if (piece.getPlayerColour() == pc){
+				if (null != piece && piece.getPlayerColour() == pc){
 					return piece;
 				}
 				return null;
@@ -186,16 +234,29 @@ public class ChessModel extends Observable{
 		}				
 	}
 	
+	//Returns whether piece at (myCol, myRow) can be attacked by a pawn on column col
+	public boolean canBeAttackedByPawn(PlayerColour opponent, int myCol, int myRow, int col, int direction){
+		if (this.inBoard(col) && this.inBoard(myRow + direction)){
+			ChessPiece checkPiece = this.chessBoard.getPiece(new Pair<Integer, Integer>(col, myRow + direction));
+			
+			if (null != checkPiece && 
+				checkPiece.getPlayerColour() == opponent &&
+				checkPiece.getType() == ChessPieceType.PAWN){
+				return true;
+			}
+		}
+		return false;
+	}
 	// Returns whether the player with colour pc is in check
 	public boolean inCheck(PlayerColour pc){
 		
-		King myKing = this.player1.king;
-		Player opponent = this.player2;
+		King myKing = this.playerWhite.king;
+		Player opponent = this.playerBlack;
 		
 		if (pc == PlayerColour.BLACK)
 		{
-			myKing = this.player2.king;
-			opponent = this.player1;
+			myKing = this.playerBlack.king;
+			opponent = this.playerWhite;
 		}
 		
 		int myKingCol = myKing.getPosition().getFirst();
@@ -203,47 +264,46 @@ public class ChessModel extends Observable{
 		
 		//Look for all ways pc's king could be attacked
 		if (opponent.queen != null || opponent.rooks.size() > 0){
-			ChessPieceType firstUp = this.getFirstInDirection(myKing.getPlayerColour(), myKingCol, myKingRow, 0, 1).getType();
-			if (firstUp == ChessPieceType.QUEEN || firstUp == ChessPieceType.ROOK){
+			ChessPiece firstInDir = this.getFirstInDirection(opponent.getPlayerColour(), myKingCol, myKingRow, 0, 1);
+			if (null != firstInDir &&(firstInDir.getType() == ChessPieceType.QUEEN || firstInDir.getType() == ChessPieceType.ROOK)){
 				return true;
 			}
 			
-			ChessPieceType firstRight = this.getFirstInDirection(myKing.getPlayerColour(), myKingCol, myKingRow, 1, 0).getType();
-			if (firstRight == ChessPieceType.QUEEN || firstRight == ChessPieceType.ROOK){
+			firstInDir = this.getFirstInDirection(opponent.getPlayerColour(), myKingCol, myKingRow, 1, 0);
+			if (null != firstInDir && (firstInDir.getType() == ChessPieceType.QUEEN || firstInDir.getType() == ChessPieceType.ROOK)){
 				return true;
 			}
 			
-			ChessPieceType firstDown = this.getFirstInDirection(myKing.getPlayerColour(), myKingCol, myKingRow, 0, -1).getType();
-			if (firstDown == ChessPieceType.QUEEN || firstDown == ChessPieceType.ROOK){
+			firstInDir = this.getFirstInDirection(opponent.getPlayerColour(), myKingCol, myKingRow, 0, -1);
+			if (null != firstInDir && (firstInDir.getType() == ChessPieceType.QUEEN || firstInDir.getType() == ChessPieceType.ROOK)){
 				return true;
 			}
 			
-			ChessPieceType firstLeft = this.getFirstInDirection(myKing.getPlayerColour(), myKingCol, myKingRow, -1, 0).getType();
-
-			if (firstLeft == ChessPieceType.QUEEN || firstLeft == ChessPieceType.ROOK)
-			{
+			firstInDir = this.getFirstInDirection(opponent.getPlayerColour(), myKingCol, myKingRow, -1, 0);
+			if (null != firstInDir && (firstInDir.getType() == ChessPieceType.QUEEN || firstInDir.getType() == ChessPieceType.ROOK)){
 				return true;
 			}
+			
 		}
-		
+
 		if (opponent.queen != null || opponent.bishops.size() > 0){
-			ChessPieceType firstInDir = this.getFirstInDirection(myKing.getPlayerColour(), myKingCol, myKingRow, 1, 1).getType();
-			if (firstInDir == ChessPieceType.QUEEN || firstInDir == ChessPieceType.BISHOP){
+			ChessPiece firstInDir = this.getFirstInDirection(opponent.getPlayerColour(), myKingCol, myKingRow, 1, 1);
+			if (null != firstInDir &&(firstInDir.getType() == ChessPieceType.QUEEN || firstInDir.getType() == ChessPieceType.ROOK)){
 				return true;
 			}
 			
-			firstInDir = this.getFirstInDirection(myKing.getPlayerColour(), myKingCol, myKingRow, -1, 1).getType();
-			if (firstInDir == ChessPieceType.QUEEN || firstInDir == ChessPieceType.BISHOP){
+			firstInDir = this.getFirstInDirection(opponent.getPlayerColour(), myKingCol, myKingRow, 1, -1);
+			if (null != firstInDir && (firstInDir.getType() == ChessPieceType.QUEEN || firstInDir.getType() == ChessPieceType.ROOK)){
 				return true;
 			}
 			
-			firstInDir = this.getFirstInDirection(myKing.getPlayerColour(), myKingCol, myKingRow, 1, -1).getType();
-			if (firstInDir == ChessPieceType.QUEEN || firstInDir == ChessPieceType.BISHOP){
+			firstInDir = this.getFirstInDirection(opponent.getPlayerColour(), myKingCol, myKingRow, -1, 1);
+			if (null != firstInDir && (firstInDir.getType() == ChessPieceType.QUEEN || firstInDir.getType() == ChessPieceType.ROOK)){
 				return true;
 			}
 			
-			firstInDir = this.getFirstInDirection(myKing.getPlayerColour(), myKingCol, myKingRow, -1, -1).getType();
-			if (firstInDir == ChessPieceType.QUEEN || firstInDir == ChessPieceType.BISHOP){
+			firstInDir = this.getFirstInDirection(opponent.getPlayerColour(), myKingCol, myKingRow, -1, -1);
+			if (null != firstInDir && (firstInDir.getType() == ChessPieceType.QUEEN || firstInDir.getType() == ChessPieceType.ROOK)){
 				return true;
 			}
 		}
@@ -260,24 +320,10 @@ public class ChessModel extends Observable{
 			}
 		}
 		if (opponent.pawns.size() > 0){
-			// Check attacking pawn from the left
-			if (this.inBoard(myKingCol - 1) && this.inBoard(myKingRow - myKing.getDirectionMultiplier())){
-				ChessPiece checkPiece = this.chessBoard.getPiece(new Pair<Integer, Integer>(myKingCol - 1, myKingRow - myKing.getDirectionMultiplier()));
-				if (checkPiece.getPlayerColour() == opponent.getColour() &&
-					checkPiece.getType() == ChessPieceType.PAWN){
-					return true;
-				}
+			if (this.canBeAttackedByPawn(opponent.getPlayerColour(), myKingCol, myKingRow, myKingCol - 1, myKing.getDirectionMultiplier()) ||
+				this.canBeAttackedByPawn(opponent.getPlayerColour(), myKingCol, myKingRow, myKingCol + 1, myKing.getDirectionMultiplier())){
+				return true;
 			}
-			
-			// Check attacking pawn from the right
-			if (this.inBoard(myKingCol + 1) && this.inBoard(myKingRow - myKing.getDirectionMultiplier())){
-				ChessPiece checkPiece = this.chessBoard.getPiece(new Pair<Integer, Integer>(myKingCol + 1, myKingRow - myKing.getDirectionMultiplier()));
-				if (checkPiece.getPlayerColour() == opponent.getColour() &&
-					checkPiece.getType() == ChessPieceType.PAWN){
-					return true;
-				}
-			}
-			
 		}
 		
 		return false;
@@ -290,40 +336,39 @@ public class ChessModel extends Observable{
 		Pair<Integer,Integer> oldPos = p.getPosition();
 		ChessPiece removedPiece = this.getBoard().getPiece(newPos);
 		
-		this.movePiece(oldPos, newPos);
+		this.movePiece(oldPos, newPos, false);
 		inCheck =  this.inCheck(p.getPlayerColour());
 		
 		//Restore previous board state
-		this.movePiece(newPos, oldPos);
+		this.movePiece(newPos, oldPos, false);
 		if (removedPiece != null){
 			this.addPiece(removedPiece);
 		}
 		return inCheck;
 	}
+	
 	// Moves piece at start to end
-	public void movePiece(Pair<Integer,Integer> start, Pair<Integer,Integer> end){
-		System.out.println("Moving Piece");
+	public void movePiece(Pair<Integer,Integer> start, Pair<Integer,Integer> end, boolean actualMove){
+		
 		ChessPiece startPiece = this.chessBoard.getPiece(start);
 		ChessPiece endPiece = this.chessBoard.getPiece(end);
 		
 		if (null != endPiece){
-			System.out.println("Captured piece :(" + end.getFirst() + ", " + end.getSecond() + ")");
 			this.removePiece(endPiece);
 		}
 		
-		startPiece.setPosition(end);
+		startPiece.setPosition(end, actualMove);
 		this.chessBoard.setPiece(end, startPiece);
 		this.chessBoard.setPiece(start, null);
-		this.setChangedAndNotify();
 	}
 	
 	public void addPiece(ChessPiece p){
 		this.chessBoard.setPiece(p.getPosition(),p);
 		ChessPieceType type = p.getType();
 		
-		Player pieceOwner = this.player1;
+		Player pieceOwner = this.playerWhite;
 		if (p.getPlayerColour() == PlayerColour.BLACK){
-			pieceOwner = this.player2;
+			pieceOwner = this.playerBlack;
 		}
 		switch(type){
 			case KING:
@@ -351,9 +396,9 @@ public class ChessModel extends Observable{
 		this.chessBoard.setPiece(p.getPosition(),null);
 		ChessPieceType type = p.getType();
 		
-		Player pieceOwner = this.player1;
+		Player pieceOwner = this.playerWhite;
 		if (p.getPlayerColour() == PlayerColour.BLACK){
-			pieceOwner = this.player2;
+			pieceOwner = this.playerBlack;
 		}
 		
 		switch(type){

@@ -62,7 +62,7 @@ public abstract class ChessPiece {
 		return this.myPosition;
 	}
 	
-	public void setPosition(Pair<Integer,Integer> p){
+	public void setPosition(Pair<Integer,Integer> p, boolean actualMove){
 		this.myPosition = p;
 	}
 	
@@ -76,10 +76,46 @@ public abstract class ChessPiece {
 	abstract public ArrayList<Pair<Integer,Integer>> getPossibleMoves();
 	
 	//Try moving the piece to new position and see if the owner is in check
-	public boolean tryMoveCheck(Pair<Integer,Integer> newPos){
-		
-		final Pair<Integer,Integer> myPos = this.myPosition;
+	protected boolean tryMoveCheck(Pair<Integer,Integer> newPos){
 		
 		return this.model.tryMoveCheck(this, newPos);
+	}
+	
+	protected ArrayList<Pair<Integer,Integer>> getValidMovesInDirection(int dCol, int dRow){
+		
+		int currCol = this.myPosition.getFirst();
+		int currRow = this.myPosition.getSecond();
+		PlayerColour myColour = this.getPlayerColour();
+		ArrayList<Pair<Integer,Integer>> moves = new ArrayList<Pair<Integer,Integer>>();
+		
+		if (dCol == 0 && dRow == 0){
+			System.err.println("Both dcol,drow are 0");
+			return moves;
+		}
+		
+		while (true){
+			currCol += dCol;
+			currRow += dRow;
+			
+			if (!this.model.inBoard(currCol) || !this.model.inBoard(currRow)){
+				return moves;
+			}
+			else{
+				ChessPiece piece = this.model.getBoard().getPiece(new Pair<Integer, Integer>(currCol, currRow));
+				Pair<Integer, Integer> position = new Pair<Integer, Integer>(currCol, currRow);
+				
+				if (null == piece){
+					if (!this.tryMoveCheck(position)){
+						moves.add(position);
+					}
+				}
+				else{
+					if (piece.getPlayerColour() != this.getPlayerColour() && !this.tryMoveCheck(position)){
+						moves.add(position);
+					}
+					return moves;
+				}
+			}
+		}				
 	}
 }

@@ -15,7 +15,7 @@ public class Player {
 		this.myColour = pc;
 	}
 	
-	public PlayerColour getColour(){
+	public PlayerColour getPlayerColour(){
 		return this.myColour;
 	}
 }

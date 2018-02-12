@@ -55,6 +55,7 @@ public class ChessView extends JPanel implements Observer {
 	}
 	
 	public ChessView(ChessModel m){
+		
 		setBackground(Color.WHITE);
 		
 		//Initialize MVC
@@ -87,7 +88,7 @@ public class ChessView extends JPanel implements Observer {
    	 	
    	 	final int BOARD_SIZE = this.model.getBoard().BOARD_SIZE;
    	 	final double CELL_SIZE = this.model.getBoardSize().getWidth() / BOARD_SIZE;
-   	 	
+ 
    	 	final Color SELECTED_COLOUR = Color.BLUE;
    	 	final Color HIGHLIGHTED_COLOUR = new Color(144, 238, 144);//new Color(255, 255, 204);
         Color[] tileColours = new Color[2];
@@ -105,34 +106,8 @@ public class ChessView extends JPanel implements Observer {
 				Pair<Integer, Integer> pos = new Pair<Integer, Integer>(column, BOARD_SIZE - row - 1);
 				
 				// Fill in cell background
-				switch (this.model.getBoard().getState(pos)){
-					case DEFAULT:
-						g2.setPaint(tileColours[(column + row) % 2]);	//Checker board pattern
-						break;
-					case SELECTED:
-						g2.setPaint(tileColours[(column + row) % 2]);
-						break;
-					case HIGHLIGHTED:
-						//g2.setPaint(HIGHLIGHTED_COLOUR);
-						g2.setPaint(tileColours[(column + row) % 2]);
-						break;
-					default:
-						System.err.println("Unexpected state (" + column + ", " + row +"): " + this.model.getBoard().getState(pos));
-				}
+				g2.setPaint(tileColours[(column + row) % 2]);
 				g2.fill(new Rectangle2D.Double(CELL_SIZE * column, CELL_SIZE * row, CELL_SIZE,CELL_SIZE));
-				
-				switch (this.model.getBoard().getState(pos)){
-					case DEFAULT:
-						break;
-					case SELECTED:
-						break;
-					case HIGHLIGHTED:
-						g2.setPaint(HIGHLIGHTED_COLOUR);
-						g2.fillOval((int)(CELL_SIZE * (column + 0.25)), (int)(CELL_SIZE * (row + 0.25)), (int)CELL_SIZE / 2, (int)CELL_SIZE / 2);
-						break;
-					default:
-						System.err.println("Unexpected state (" + column + ", " + row +"): " + this.model.getBoard().getState(pos));
-				}
 				
 				// Draw chess piece if there is one
 				ChessPiece piece = this.model.getBoard().getPiece(pos);
@@ -169,8 +144,20 @@ public class ChessView extends JPanel implements Observer {
 					
 					g.drawImage(pieceImage, (int) CELL_SIZE * column, (int) CELL_SIZE * row, (int) CELL_SIZE, (int) CELL_SIZE, null);
 				}
-				
-				
+				switch (this.model.getBoard().getState(pos)){
+					case DEFAULT:
+						break;
+					case SELECTED:
+						break;
+					case HIGHLIGHTED:
+						final double CIRCLE_DIAMETER = 0.3 * CELL_SIZE; 
+						g2.setPaint(HIGHLIGHTED_COLOUR);
+						g2.fillOval((int)(CELL_SIZE * (column + 0.5) - CIRCLE_DIAMETER / 2), (int)(CELL_SIZE * (row + 0.5) - CIRCLE_DIAMETER / 2), (int)CIRCLE_DIAMETER, (int)CIRCLE_DIAMETER);
+						break;
+					default:
+						System.err.println("Unexpected state (" + column + ", " + row +"): " + this.model.getBoard().getState(pos));
+				}
+							
 			}
 		}
 	}
