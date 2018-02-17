@@ -45,11 +45,11 @@ public class ChessView extends JPanel implements Observer {
 			
 			if (0 <= x && x < this.model.getBoardSize().getWidth() &&
 					0 <= y && y < this.model.getBoardSize().getHeight()){
-				int BOARD_SIZE = this.model.getBoard().BOARD_SIZE;
+				int BOARD_SIZE = this.model.getBoard().getBoardSize();
 				int col = (int) ( (x * BOARD_SIZE) / this.model.getBoardSize().getWidth());
 				int row = BOARD_SIZE - (int) ( (y * BOARD_SIZE) / this.model.getBoardSize().getHeight()) - 1;
 				System.out.println("Clicked: (" + col + ", " + row + ")");
-				this.model.selectPosition(new Pair<Integer, Integer>(col,row));
+				this.model.selectPosition(new Position(col,row));
 			}
 	    }
 	}
@@ -86,7 +86,7 @@ public class ChessView extends JPanel implements Observer {
 	public void paintComponent(Graphics g) {
    	 	super.paintComponent(g);
    	 	
-   	 	final int BOARD_SIZE = this.model.getBoard().BOARD_SIZE;
+   	 	final int BOARD_SIZE = this.model.getBoard().getBoardSize();
    	 	final double CELL_SIZE = this.model.getBoardSize().getWidth() / BOARD_SIZE;
  
    	 	final Color SELECTED_COLOUR = Color.BLUE;
@@ -103,7 +103,7 @@ public class ChessView extends JPanel implements Observer {
         
         for (int column = 0; column < BOARD_SIZE; column++){
 			for (int row = 0; row < BOARD_SIZE; row++){
-				Pair<Integer, Integer> pos = new Pair<Integer, Integer>(column, BOARD_SIZE - row - 1);
+				Position pos = new Position(column, BOARD_SIZE - row - 1);
 				
 				// Fill in cell background
 				g2.setPaint(tileColours[(column + row) % 2]);

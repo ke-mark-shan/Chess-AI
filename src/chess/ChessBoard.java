@@ -5,7 +5,7 @@ package chess;
 // A cell on the board is either a chess piece or null
 
 public class ChessBoard {
-	public static final int BOARD_SIZE = 8;
+	private static final int BOARD_SIZE = 8;
 	
 	private ChessPiece[][] board = new ChessPiece[BOARD_SIZE][BOARD_SIZE];
 	private BoardCellState[][] states = new BoardCellState[BOARD_SIZE][BOARD_SIZE];
@@ -19,18 +19,22 @@ public class ChessBoard {
 	}
 	
 	// Getters and  Setters
-	public ChessPiece getPiece(Pair<Integer,Integer> pos){
+	public int getBoardSize(){
+		return this.BOARD_SIZE;
+	}
+	
+	public ChessPiece getPiece(Position pos){
 		return board[pos.getFirst()][pos.getSecond()];
 	}
-	public void setPiece(Pair<Integer,Integer> pos, ChessPiece p){
+	public void setPiece(Position pos, ChessPiece p){
 		board[pos.getFirst()][pos.getSecond()] = p;
 	}
 	
-	public BoardCellState getState(Pair<Integer, Integer> pos){
+	public BoardCellState getState(Position pos){
 		return states[pos.getFirst()][pos.getSecond()];
 	}
 	
-	public void setState(Pair<Integer,Integer> pos, BoardCellState s){
+	public void setState(Position pos, BoardCellState s){
 		states[pos.getFirst()][pos.getSecond()] = s;
 	}
 	

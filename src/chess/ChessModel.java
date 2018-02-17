@@ -10,8 +10,8 @@ public class ChessModel extends Observable{
 	private ChessBoard chessBoard;
 	private Rectangle2D boardDimensions;
 	private PlayerColour turn;
-	private Pair<Integer, Integer> selectedPos;
-	private ArrayList<Pair<Integer,Integer>> highlightedPos;	//Highlighted positions
+	private Position selectedPos;
+	private ArrayList<Position> highlightedPos;	//Highlighted positions
 	
 	public ChessModel(Player p1, Player p2){
 		
@@ -42,7 +42,7 @@ public class ChessModel extends Observable{
 	
 	// Returns whether row/column i is inside the board
 	public boolean inBoard(int i){
-		return (0 <= i && i < this.getBoard().BOARD_SIZE);
+		return (0 <= i && i < this.getBoard().getBoardSize());
 	}
 	
 	public void swapTurns(){
@@ -65,42 +65,42 @@ public class ChessModel extends Observable{
 			owner = this.playerBlack;
 		}
 		
-		ChessPiece toAdd = new Rook(this, pc, new Pair<Integer,Integer>(0, row));
+		ChessPiece toAdd = new Rook(this, pc, new Position(0, row));
 		owner.rooks.add((Rook) toAdd);
-		this.chessBoard.setPiece(new Pair<Integer,Integer>(0, row), toAdd);
+		this.chessBoard.setPiece(new Position(0, row), toAdd);
 		
-		toAdd = new Knight(this, pc, new Pair<Integer,Integer>(1, row));
+		toAdd = new Knight(this, pc, new Position(1, row));
 		owner.knights.add((Knight) toAdd);
-		this.chessBoard.setPiece(new Pair<Integer,Integer>(1, row), toAdd);
+		this.chessBoard.setPiece(new Position(1, row), toAdd);
 		
-		toAdd = new Bishop(this, pc, new Pair<Integer,Integer>(2, row));
+		toAdd = new Bishop(this, pc, new Position(2, row));
 		owner.bishops.add((Bishop) toAdd);
-		this.chessBoard.setPiece(new Pair<Integer,Integer>(2, row), toAdd);
+		this.chessBoard.setPiece(new Position(2, row), toAdd);
 		
-		toAdd = new Queen(this, pc, new Pair<Integer,Integer>(3, row));
+		toAdd = new Queen(this, pc, new Position(3, row));
 		owner.queen = (Queen) toAdd;
-		this.chessBoard.setPiece(new Pair<Integer,Integer>(3, row), toAdd);
+		this.chessBoard.setPiece(new Position(3, row), toAdd);
 		
-		toAdd = new King(this, pc, new Pair<Integer,Integer>(4, row));
+		toAdd = new King(this, pc, new Position(4, row));
 		owner.king = (King) toAdd;
-		this.chessBoard.setPiece(new Pair<Integer,Integer>(4, row), toAdd);
+		this.chessBoard.setPiece(new Position(4, row), toAdd);
 		
-		toAdd = new Bishop(this, pc, new Pair<Integer,Integer>(5, row));
+		toAdd = new Bishop(this, pc, new Position(5, row));
 		owner.bishops.add((Bishop) toAdd);
-		this.chessBoard.setPiece(new Pair<Integer,Integer>(5, row), toAdd);
+		this.chessBoard.setPiece(new Position(5, row), toAdd);
 		
-		toAdd = new Knight(this, pc, new Pair<Integer,Integer>(6, row));
+		toAdd = new Knight(this, pc, new Position(6, row));
 		owner.knights.add((Knight) toAdd);
-		this.chessBoard.setPiece(new Pair<Integer,Integer>(6, row), toAdd);
+		this.chessBoard.setPiece(new Position(6, row), toAdd);
 		
-		toAdd =  new Rook(this, pc, new Pair<Integer,Integer>(7, row));
+		toAdd =  new Rook(this, pc, new Position(7, row));
 		owner.rooks.add((Rook) toAdd);
-		this.chessBoard.setPiece(new Pair<Integer,Integer>(7, row), toAdd);
+		this.chessBoard.setPiece(new Position(7, row), toAdd);
 	}
 	
 	private void setupPawns(int row, PlayerColour pc){
 		
-		final int BOARD_SIZE = this.getBoard().BOARD_SIZE;
+		final int BOARD_SIZE = this.getBoard().getBoardSize();
 		
 		Pawn toAdd;
 		Player owner = this.playerWhite;
@@ -110,9 +110,9 @@ public class ChessModel extends Observable{
 		}
 		
 		for (int column = 0; column < BOARD_SIZE; column++){
-			toAdd = new Pawn(this, pc, new Pair<Integer,Integer>(column, row));
+			toAdd = new Pawn(this, pc, new Position(column, row));
 			owner.pawns.add(toAdd);
-			this.chessBoard.setPiece(new Pair<Integer,Integer>(column, row), toAdd);
+			this.chessBoard.setPiece(new Position(column, row), toAdd);
 		}
 	}
 	
@@ -125,11 +125,11 @@ public class ChessModel extends Observable{
 		this.playerWhite = p1;
 		this.playerBlack = p2;
 		
-		final int BOARD_SIZE = this.chessBoard.BOARD_SIZE;
+		final int BOARD_SIZE = this.chessBoard.getBoardSize();
 		
 		for (int column = 0; column < BOARD_SIZE; column++){
 			for (int row = 0; row < BOARD_SIZE; row++){
-				this.chessBoard.setPiece(new Pair<Integer, Integer>(column, row), null);
+				this.chessBoard.setPiece(new Position(column, row), null);
 			}
 		}
 		
@@ -145,11 +145,11 @@ public class ChessModel extends Observable{
 	}
 
 	//Probably should be using contains, seems like I gotta do hashcode as well tho
-	private boolean isHighlightedPos(Pair<Integer, Integer> pos){
+	private boolean isHighlightedPos(Position pos){
 		if (this.highlightedPos == null){
 			return true;
 		}
-		for (Pair<Integer, Integer> hpos : this.highlightedPos){
+		for (Position hpos : this.highlightedPos){
 			if (pos.equals(hpos)){
 				return true;
 			}
@@ -158,7 +158,7 @@ public class ChessModel extends Observable{
 	}
 	
 	private void unselectPosition(){
-		for (Pair<Integer, Integer> hpos : this.highlightedPos){
+		for (Position hpos : this.highlightedPos){
 			this.chessBoard.setState(hpos, BoardCellState.DEFAULT);
 		}
 		this.chessBoard.setState(selectedPos, BoardCellState.DEFAULT);
@@ -167,7 +167,7 @@ public class ChessModel extends Observable{
 	}
 	
 	// Processes result of clicking a cell
-	public void selectPosition(Pair<Integer, Integer> pos){
+	public void selectPosition(Position pos){
 		
 		ChessPiece piece = this.chessBoard.getPiece(pos);
 		
@@ -200,7 +200,7 @@ public class ChessModel extends Observable{
 		this.chessBoard.setState(selectedPos, BoardCellState.SELECTED);
 		
 		this.highlightedPos = piece.getPossibleMoves();
-		for (Pair<Integer, Integer> hpos : this.highlightedPos){
+		for (Position hpos : this.highlightedPos){
 			this.chessBoard.setState(hpos, BoardCellState.HIGHLIGHTED);
 		}
 		this.setChangedAndNotify();
@@ -224,7 +224,7 @@ public class ChessModel extends Observable{
 				return null;
 			}
 			else{
-				ChessPiece piece = this.chessBoard.getPiece(new Pair<Integer, Integer>(currCol, currRow));
+				ChessPiece piece = this.chessBoard.getPiece(new Position(currCol, currRow));
 				
 				if (null != piece && piece.getPlayerColour() == pc){
 					return piece;
@@ -237,7 +237,7 @@ public class ChessModel extends Observable{
 	//Returns whether piece at (myCol, myRow) can be attacked by a pawn on column col
 	public boolean canBeAttackedByPawn(PlayerColour opponent, int myCol, int myRow, int col, int direction){
 		if (this.inBoard(col) && this.inBoard(myRow + direction)){
-			ChessPiece checkPiece = this.chessBoard.getPiece(new Pair<Integer, Integer>(col, myRow + direction));
+			ChessPiece checkPiece = this.chessBoard.getPiece(new Position(col, myRow + direction));
 			
 			if (null != checkPiece && 
 				checkPiece.getPlayerColour() == opponent &&
@@ -330,10 +330,10 @@ public class ChessModel extends Observable{
 	}
 	
 	// Returns whether moving ChessPiece p to position newPos will put its owner in check
-	public boolean tryMoveCheck(ChessPiece p, Pair<Integer, Integer> newPos){
+	public boolean tryMoveCheck(ChessPiece p, Position newPos){
 		
 		boolean inCheck = false;
-		Pair<Integer,Integer> oldPos = p.getPosition();
+		Position oldPos = p.getPosition();
 		ChessPiece removedPiece = this.getBoard().getPiece(newPos);
 		
 		this.movePiece(oldPos, newPos, false);
@@ -348,7 +348,7 @@ public class ChessModel extends Observable{
 	}
 	
 	// Moves piece at start to end
-	public void movePiece(Pair<Integer,Integer> start, Pair<Integer,Integer> end, boolean actualMove){
+	public void movePiece(Position start, Position end, boolean actualMove){
 		
 		ChessPiece startPiece = this.chessBoard.getPiece(start);
 		ChessPiece endPiece = this.chessBoard.getPiece(end);
@@ -393,6 +393,8 @@ public class ChessModel extends Observable{
 	}
 	
 	public void removePiece(ChessPiece p){
+		if (null == p) return;
+		
 		this.chessBoard.setPiece(p.getPosition(),null);
 		ChessPieceType type = p.getType();
 		
