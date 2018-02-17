@@ -7,12 +7,18 @@ public class Rook extends ChessPiece{
 		super(m, pc, pos, ChessPieceType.ROOK);
 	}
 	
+	@Override
 	public ArrayList<Position> getPossibleMoves(){
-		
+
 		int x = super.getPosition().getFirst();
 		int y = super.getPosition().getSecond();
 
 		ArrayList<Position> moves = new ArrayList<Position>();
+		
+		moves.addAll(this.getValidMovesInDirection(1, 0));
+		moves.addAll(this.getValidMovesInDirection(-1, 0));
+		moves.addAll(this.getValidMovesInDirection(0, 1));
+		moves.addAll(this.getValidMovesInDirection(0, -1));
 		
 		return moves;
 	}
