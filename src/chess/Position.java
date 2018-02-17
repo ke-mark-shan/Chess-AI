@@ -23,7 +23,19 @@ public class Position{
 		second = b;
 	}
 	
-	public boolean equals(Position other){
-		return (this.first == other.getFirst() && this.second == other.getSecond());
+     public int hashCode() {
+         final int prime = 31;
+         int result = 1;
+         result = prime * result + this.first;
+         result = prime * result + this.second;
+         return result;
+     }
+	 
+	public boolean equals(Object other){
+		if (!(other instanceof Position)) {
+	        return false;
+	    }
+		Position otherPosition = (Position) other;
+		return (this.first == otherPosition.getFirst() && this.second == otherPosition.getSecond());
 	}
 }

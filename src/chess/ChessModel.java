@@ -226,10 +226,13 @@ public class ChessModel extends Observable{
 			else{
 				ChessPiece piece = this.chessBoard.getPiece(new Position(currCol, currRow));
 				
-				if (null != piece && piece.getPlayerColour() == pc){
-					return piece;
+				if (null != piece){
+					if (piece.getPlayerColour() == pc){
+						return piece;
+					}
+					return null;
 				}
-				return null;
+				
 			}
 		}				
 	}
@@ -247,6 +250,7 @@ public class ChessModel extends Observable{
 		}
 		return false;
 	}
+	
 	// Returns whether the player with colour pc is in check
 	public boolean inCheck(PlayerColour pc){
 		

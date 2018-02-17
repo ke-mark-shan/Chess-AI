@@ -16,28 +16,29 @@ public class PawnGetMoves extends ChessTestBase{
 	
 	@Test
 	public void test() {
-		System.out.println("Pawn Tests: Start");
+		System.out.println("--Pawn Tests: Start--");
 		System.out.println();
 		this.firstMove();
 		this.firstMoveBlocked();
 		this.attacks();
 		this.endOfBoard();
+		this.moveAndInCheck();
 		System.out.println();
-		System.out.println("Pawn Tests: Done");
+		System.out.println("--Pawn Tests: Done--");
 	}
 
 	//Tests whether the first move allows the piece to move 2 positions
 	public void firstMove(){
 		System.out.println("firstMove: Start");
-		super.reset();
+		this.reset();
 		
 		final Position oneStep = new Position(1,2);
 		final Position twoStep = new Position(1,3);
 		
-		Pawn testPawn = new Pawn(super.getModel(), PlayerColour.WHITE, new Position(1,1));
+		Pawn testPawn = new Pawn(this.getModel(), PlayerColour.WHITE, new Position(1,1));
 		ArrayList<Position> testMoves;
 		
-		super.getModel().addPiece(testPawn);
+		this.getModel().addPiece(testPawn);
 		
 		testMoves = testPawn.getPossibleMoves();
 		
@@ -57,14 +58,14 @@ public class PawnGetMoves extends ChessTestBase{
 	//Tests when pawn is blocked on first move
 	public void firstMoveBlocked(){
 		System.out.println("firstMoveBlocked: Start");
-		super.reset();
+		this.reset();
 				
-		Pawn testPawn = new Pawn(super.getModel(), PlayerColour.WHITE, new Position(1,1));
-		Pawn blockPawn = new Pawn(super.getModel(), PlayerColour.BLACK, new Position(1,2));
+		Pawn testPawn = new Pawn(this.getModel(), PlayerColour.WHITE, new Position(1,1));
+		Pawn blockPawn = new Pawn(this.getModel(), PlayerColour.BLACK, new Position(1,2));
 		ArrayList<Position> testMoves;
 		
-		super.getModel().addPiece(testPawn);
-		super.getModel().addPiece(blockPawn);
+		this.getModel().addPiece(testPawn);
+		this.getModel().addPiece(blockPawn);
 		
 		testMoves = testPawn.getPossibleMoves();
 		
@@ -82,18 +83,18 @@ public class PawnGetMoves extends ChessTestBase{
 	//Tests when pawn can attack
 	public void attacks(){
 		System.out.println("attacks: Start");
-		super.reset();
+		this.reset();
 		
-		Pawn testPawn = new Pawn(super.getModel(), PlayerColour.WHITE, new Position(1,1));
-		Pawn blockPawn = new Pawn(super.getModel(), PlayerColour.BLACK, new Position(1,2));
-		Pawn attackedPawn1 = new Pawn(super.getModel(), PlayerColour.BLACK, new Position(0,2));
-		Pawn attackedPawn2 = new Pawn(super.getModel(), PlayerColour.BLACK, new Position(2,2));
+		Pawn testPawn = new Pawn(this.getModel(), PlayerColour.WHITE, new Position(1,1));
+		Pawn blockPawn = new Pawn(this.getModel(), PlayerColour.BLACK, new Position(1,2));
+		Pawn attackedPawn1 = new Pawn(this.getModel(), PlayerColour.BLACK, new Position(0,2));
+		Pawn attackedPawn2 = new Pawn(this.getModel(), PlayerColour.BLACK, new Position(2,2));
 		ArrayList<Position> testMoves;
 		
-		super.getModel().addPiece(testPawn);
-		super.getModel().addPiece(blockPawn);
-		super.getModel().addPiece(attackedPawn1);
-		super.getModel().addPiece(attackedPawn2);
+		this.getModel().addPiece(testPawn);
+		this.getModel().addPiece(blockPawn);
+		this.getModel().addPiece(attackedPawn1);
+		this.getModel().addPiece(attackedPawn2);
 		
 		testMoves = testPawn.getPossibleMoves();
 		
@@ -113,13 +114,13 @@ public class PawnGetMoves extends ChessTestBase{
 	//Test when pawn reaches end of board
 	public void endOfBoard(){
 		System.out.println("endOfBoard: Start");
-		super.reset();
+		this.reset();
 		
-		Pawn testPawn = new Pawn(super.getModel(), PlayerColour.WHITE, new Position(1,7));
+		Pawn testPawn = new Pawn(this.getModel(), PlayerColour.WHITE, new Position(1,7));
 
 		ArrayList<Position> testMoves;
 		
-		super.getModel().addPiece(testPawn);
+		this.getModel().addPiece(testPawn);
 		
 		testMoves = testPawn.getPossibleMoves();
 		
@@ -132,5 +133,30 @@ public class PawnGetMoves extends ChessTestBase{
 			fail("PawnGetMoves: Expected no possible moves when reached end of board");
 		}
 		System.out.println("endOfBoard: Done");
+	}
+
+	//Tests when pawn moving would put its king in check
+	public void moveAndInCheck(){
+		System.out.println("moveAndInCheck: Start");
+		this.reset();
+				
+		Pawn testPawn = new Pawn(this.getModel(), PlayerColour.WHITE, new Position(2,0));
+		Queen checkQueen = new Queen(this.getModel(), PlayerColour.BLACK, new Position(0,0));
+		ArrayList<Position> testMoves;
+		
+		this.getModel().addPiece(testPawn);
+		this.getModel().addPiece(checkQueen);
+		
+		testMoves = testPawn.getPossibleMoves();
+		
+		if (testMoves.size() != 0) {
+			
+			System.out.println("Got Moves:");
+			for (Position p : testMoves){
+				System.out.println("(" + p.getFirst() + ", " + p.getSecond() + ")");
+			}
+			fail("PawnGetMoves: Expected no possible moves");
+		}
+		System.out.println("moveAndInCheck: Done");
 	}
 }

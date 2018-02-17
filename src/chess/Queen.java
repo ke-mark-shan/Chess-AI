@@ -7,6 +7,7 @@ public class Queen extends ChessPiece{
 		super(m, pc, pos, ChessPieceType.QUEEN);
 	}
 	
+	@Override
 	public ArrayList<Position> getPossibleMoves(){
 
 		int x = super.getPosition().getFirst();
@@ -14,6 +15,15 @@ public class Queen extends ChessPiece{
 
 		ArrayList<Position> moves = new ArrayList<Position>();
 		
+		for (int dCol = -1; dCol <= 1; dCol ++){
+			for (int dRow = -1; dRow <= 1; dRow ++){
+				if (dCol != 0 || dRow != 0){
+					moves.addAll(
+						this.getValidMovesInDirection(dCol, dRow)
+					);
+				}
+			}
+		}
 		
 		return moves;
 	}

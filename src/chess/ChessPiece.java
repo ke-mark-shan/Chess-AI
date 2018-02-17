@@ -72,8 +72,8 @@ public abstract class ChessPiece {
 				return moves;
 			}
 			else{
-				ChessPiece piece = this.model.getBoard().getPiece(new Position(currCol, currRow));
 				Position position = new Position(currCol, currRow);
+				ChessPiece piece = this.model.getBoard().getPiece(position);
 				
 				if (null == piece){
 					if (!this.tryMoveCheck(position)){
