@@ -3,6 +3,7 @@ package chess;
 import java.util.ArrayList;
 
 public class Knight extends ChessPiece{
+	
 	public Knight(ChessModel m, PlayerColour pc, Position pos){
 		super(m, pc, pos, ChessPieceType.KNIGHT);
 	}

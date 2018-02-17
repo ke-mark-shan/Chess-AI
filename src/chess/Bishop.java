@@ -3,6 +3,7 @@ package chess;
 import java.util.ArrayList;
 
 public class Bishop extends ChessPiece{
+	
 	public Bishop(ChessModel m, PlayerColour pc, Position pos){
 		super(m, pc, pos, ChessPieceType.BISHOP);
 	}

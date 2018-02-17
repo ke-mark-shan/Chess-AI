@@ -3,6 +3,7 @@ package chess;
 import java.util.ArrayList;
 
 public class Rook extends ChessPiece{
+	
 	public Rook(ChessModel m, PlayerColour pc, Position pos){
 		super(m, pc, pos, ChessPieceType.ROOK);
 	}
