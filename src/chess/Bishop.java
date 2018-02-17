@@ -7,13 +7,15 @@ public class Bishop extends ChessPiece{
 		super(m, pc, pos, ChessPieceType.BISHOP);
 	}
 	
+	@Override
 	public ArrayList<Position> getPossibleMoves(){
-
-		int x = super.getPosition().getFirst();
-		int y = super.getPosition().getSecond();
 
 		ArrayList<Position> moves = new ArrayList<Position>();
 		
+		moves.addAll(this.getValidMovesInDirection(1, 1));
+		moves.addAll(this.getValidMovesInDirection(-1, 1));
+		moves.addAll(this.getValidMovesInDirection(1, -1));
+		moves.addAll(this.getValidMovesInDirection(-1, -1));
 		
 		return moves;
 	}

@@ -9,22 +9,23 @@ public class King extends ChessPiece{
 	
 	public ArrayList<Position> getPossibleMoves(){
 
-		int x = super.getPosition().getFirst();
-		int y = super.getPosition().getSecond();
+		int col = this.getPosition().getFirst();
+		int row = this.getPosition().getSecond();
 
 		ArrayList<Position> moves = new ArrayList<Position>();
 		
-		// King can move 1 cell in each direction
-		for (int xdir = -1; xdir <= 1; xdir++){
-			for (int ydir = -1; ydir <= 1; ydir++){
-				if ((xdir != 0 || ydir != 0) &&
-						this.getModel().inBoard(x + xdir) && this.getModel().inBoard(y + ydir)){
-					Position newPos = new Position(x + xdir, y + ydir);
-					ChessPiece target = super.getModel().getBoard().getPiece(newPos);
+		int[] moveCol = new int[]{-1,1};
+		int[] moveRow = new int[]{-1,1};
+		
+		for (int dCol : moveCol){
+			for (int dRow : moveRow){
+				if (this.getModel().inBoard(col + dCol) && this.getModel().inBoard(row + dRow)){
+					Position newPos = new Position(col + dCol, row + dRow);
+					ChessPiece target = this.getModel().getBoard().getPiece(newPos);
 					
-					if ((null == target || super.getPlayerColour() != target.getPlayerColour()) &&
+					if ((null == target || this.getPlayerColour() != target.getPlayerColour()) &&
 							!this.tryMoveCheck(newPos)){
-						moves.add(new Position(x + xdir, y + ydir));
+						moves.add(new Position(col + dCol, row + dRow));
 					}
 				}
 			}

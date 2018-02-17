@@ -2,12 +2,11 @@ package chessTests;
 
 import static org.junit.Assert.*;
 
+import chess.*;
 import java.util.ArrayList;
-
 import org.junit.Test;
 
-import chess.*;
-
+//Tests Rook.getPossibleMoves
 public class RookGetMoves extends ChessTestBase {
 
 	public RookGetMoves(){
@@ -22,6 +21,7 @@ public class RookGetMoves extends ChessTestBase {
 		this.allMovements();
 		this.moveAndAttacks();
 		this.moveAndInCheck();
+		this.moveStopCheck();
 		
 		System.out.println();
 		System.out.println("--Rook Tests: Done--");
@@ -58,30 +58,11 @@ public class RookGetMoves extends ChessTestBase {
 		expectedMoves.add(new Position(2,1));
 		expectedMoves.add(new Position(2,0));
 		
-		if (expectedMoves.size() != testMoves.size() ){
-			
-			boolean notEqual = false;
-		
-			for (Position e : expectedMoves){
-				if (testMoves.indexOf(e) < 0){
-					System.out.println(e.getFirst() + ", " + e.getSecond());
-					notEqual = true;
-					break;
-				}
-			}
-			
-			System.out.println("Expected " + expectedMoves.size() + " Moves");
-			System.out.println("Got " + testMoves.size() + " Moves:");
-			for (Position p : testMoves){
-				System.out.println("(" + p.getFirst() + ", " + p.getSecond() + ")");
-			}
-			
-			fail("RookGetMoves: Expected moves not being generated");
-		}
+		this.compareMoves(expectedMoves, testMoves);
 		System.out.println("allMovemovements: Done");
 	}
 
-	//Tests all rook moves without attacks
+	//Tests all rook moves and attacks
 	public void moveAndAttacks(){
 		System.out.println("moveAndAttacks: Start");
 		super.reset();
@@ -112,25 +93,7 @@ public class RookGetMoves extends ChessTestBase {
 		this.getModel().addPiece(testBlocker1);
 		testMoves = testRook.getPossibleMoves();
 		
-		if (expectedMoves.size() != testMoves.size() ){
-			
-			boolean notEqual = false;
-		
-			for (Position e : expectedMoves){
-				if (testMoves.indexOf(e) < 0){
-					notEqual = true;
-					break;
-				}
-			}
-			
-			System.out.println("Expected " + expectedMoves.size() + " Moves");
-			System.out.println("Got " + testMoves.size() + " Moves:");
-			for (Position p : testMoves){
-				System.out.println("(" + p.getFirst() + ", " + p.getSecond() + ")");
-			}
-			
-			fail("RookGetMoves: Expected moves not being generated");
-		}
+		this.compareMoves(expectedMoves, testMoves);
 		System.out.println("moveAndAttacks: Done");
 	}
 
@@ -157,16 +120,29 @@ public class RookGetMoves extends ChessTestBase {
 			expectedMoves.add(new Position(c,0));
 		}
 		
-		if (testMoves.size() != expectedMoves.size()) {
-			
-			System.out.println("Expected " + expectedMoves.size() + " Moves");
-			System.out.println("Got " + testMoves.size() + " Moves:");
-			for (Position p : testMoves){
-				System.out.println("(" + p.getFirst() + ", " + p.getSecond() + ")");
-			}
-			
-			fail("RookGetMoves: Expected moves not being generated");
-		}
+		this.compareMoves(expectedMoves, testMoves);
 		System.out.println("moveAndInCheck: Done");
+	}
+	
+	//Tests when Rook can move to stop the king from being in check
+	public void moveStopCheck(){
+		System.out.println("moveStopCheck: Start");
+		this.reset();
+			
+		Rook testRook = new Rook(this.getModel(), PlayerColour.WHITE, new Position(2,1));
+		
+		Queen checkQueen = new Queen(this.getModel(), PlayerColour.BLACK, new Position(0,0));
+		ArrayList<Position> testMoves;
+		
+		this.getModel().addPiece(testRook);
+		this.getModel().addPiece(checkQueen);
+		
+		testMoves = testRook.getPossibleMoves();
+		
+		ArrayList<Position> expectedMoves = new ArrayList<Position>();	
+		expectedMoves.add(new Position(2,0));
+		
+		this.compareMoves(expectedMoves, testMoves);
+		System.out.println("moveStopCheck: Done");
 	}
 }

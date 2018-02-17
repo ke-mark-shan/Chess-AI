@@ -1,13 +1,11 @@
 package chessTests;
 
 import static org.junit.Assert.*;
-
+import chess.*;
 import java.util.ArrayList;
-
 import org.junit.Test;
 
-import chess.*;
-
+//Tests Queen.getPossibleMoves
 public class QueenGetMoves extends ChessTestBase {
 
 	public QueenGetMoves(){
@@ -22,6 +20,7 @@ public class QueenGetMoves extends ChessTestBase {
 		this.allMovements();
 		this.moveAndAttacks();
 		this.moveAndInCheck();
+		this.moveStopCheck();
 		
 		System.out.println();
 		System.out.println("--Queen Tests: Done--");
@@ -73,30 +72,11 @@ public class QueenGetMoves extends ChessTestBase {
 		expectedMoves.add(new Position(2,1));
 		expectedMoves.add(new Position(2,0));
 		
-		if (expectedMoves.size() != testMoves.size() ){
-			
-			boolean notEqual = false;
-		
-			for (Position e : expectedMoves){
-				if (testMoves.indexOf(e) < 0){
-					System.out.println(e.getFirst() + ", " + e.getSecond());
-					notEqual = true;
-					break;
-				}
-			}
-			
-			System.out.println("Expected " + expectedMoves.size() + " Moves");
-			System.out.println("Got " + testMoves.size() + " Moves:");
-			for (Position p : testMoves){
-				System.out.println("(" + p.getFirst() + ", " + p.getSecond() + ")");
-			}
-			
-			fail("QueenGetMoves: Expected moves not being generated");
-		}
+		this.compareMoves(expectedMoves, testMoves);
 		System.out.println("allMovemovements: Done");
 	}
 
-	//Tests all queen moves without attacks
+	//Tests all queen moves and attacks
 	public void moveAndAttacks(){
 		System.out.println("moveAndAttacks: Start");
 		super.reset();
@@ -104,7 +84,6 @@ public class QueenGetMoves extends ChessTestBase {
 		Queen testQueen = new Queen(super.getModel(), PlayerColour.WHITE, new Position(2,4));
 		ArrayList<Position> testMoves;
 		super.getModel().addPiece(testQueen);
-		
 		
 		ArrayList<Position> expectedMoves = new ArrayList<Position>();
 		
@@ -145,25 +124,7 @@ public class QueenGetMoves extends ChessTestBase {
 		this.getModel().addPiece(testBlocker1);
 		testMoves = testQueen.getPossibleMoves();
 		
-		if (expectedMoves.size() != testMoves.size() ){
-			
-			boolean notEqual = false;
-		
-			for (Position e : expectedMoves){
-				if (testMoves.indexOf(e) < 0){
-					notEqual = true;
-					break;
-				}
-			}
-			
-			System.out.println("Expected " + expectedMoves.size() + " Moves");
-			System.out.println("Got " + testMoves.size() + " Moves:");
-			for (Position p : testMoves){
-				System.out.println("(" + p.getFirst() + ", " + p.getSecond() + ")");
-			}
-			
-			fail("QueenGetMoves: Expected moves not being generated");
-		}
+		this.compareMoves(expectedMoves, testMoves);
 		System.out.println("moveAndAttacks: Done");
 	}
 
@@ -190,16 +151,31 @@ public class QueenGetMoves extends ChessTestBase {
 			expectedMoves.add(new Position(c,0));
 		}
 		
-		if (testMoves.size() != expectedMoves.size()) {
-			
-			System.out.println("Expected " + expectedMoves.size() + " Moves");
-			System.out.println("Got " + testMoves.size() + " Moves:");
-			for (Position p : testMoves){
-				System.out.println("(" + p.getFirst() + ", " + p.getSecond() + ")");
-			}
-			
-			fail("QueenGetMoves: Expected moves not being generated");
-		}
+		this.compareMoves(expectedMoves, testMoves);
 		System.out.println("moveAndInCheck: Done");
+	}
+	
+	//Tests when Queen can move to stop the king from being in check
+	public void moveStopCheck(){
+		System.out.println("moveStopCheck: Start");
+		this.reset();
+			
+		Queen testQueen = new Queen(this.getModel(), PlayerColour.WHITE, new Position(2,1));
+		
+		Queen checkQueen = new Queen(this.getModel(), PlayerColour.BLACK, new Position(0,0));
+		ArrayList<Position> testMoves;
+		
+		this.getModel().addPiece(testQueen);
+		this.getModel().addPiece(checkQueen);
+		
+		testMoves = testQueen.getPossibleMoves();
+		
+		ArrayList<Position> expectedMoves = new ArrayList<Position>();
+		for (int c = 1; c <= 3; c++){	
+			expectedMoves.add(new Position(c,1));
+		}
+		
+		this.compareMoves(expectedMoves, testMoves);
+		System.out.println("moveStopCheck: Done");
 	}
 }

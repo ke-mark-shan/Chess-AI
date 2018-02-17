@@ -10,9 +10,6 @@ public class Queen extends ChessPiece{
 	@Override
 	public ArrayList<Position> getPossibleMoves(){
 
-		int x = super.getPosition().getFirst();
-		int y = super.getPosition().getSecond();
-
 		ArrayList<Position> moves = new ArrayList<Position>();
 		
 		for (int dCol = -1; dCol <= 1; dCol ++){

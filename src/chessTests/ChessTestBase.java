@@ -2,6 +2,10 @@ package chessTests;
 
 import chess.*;
 
+import static org.junit.Assert.fail;
+
+import java.util.ArrayList;
+
 public class ChessTestBase {
 
 	private ChessModel model;
@@ -39,5 +43,27 @@ public class ChessTestBase {
 		this.model.addPiece(
 			new King(this.model, PlayerColour.BLACK, new Position(7,7))
 		);
+	}
+	
+	protected void compareMoves(ArrayList<Position> expected, ArrayList<Position> received){
+		System.out.println("Comparing...");
+		if (received.size() != expected.size()) {
+			
+			boolean notEqual = false;
+			
+			for (Position e : expected){
+				if (received.indexOf(e) < 0){
+					notEqual = true;
+					break;
+				}
+			}
+			System.out.println("Expected " + expected.size() + " Moves");
+			System.out.println("Got " + received.size() + " Moves:");
+			for (Position p : received){
+				System.out.println("(" + p.getFirst() + ", " + p.getSecond() + ")");
+			}
+			
+			fail("Expected moves not being generated");
+		}
 	}
 }
