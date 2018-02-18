@@ -24,7 +24,7 @@ public class ChessView extends JPanel implements Observer {
 	final static Color HIGHLIGHTED_COLOUR = new Color(144, 238, 144);
     final static Color[] tileColours = new Color[2];
     
-	ChessModel model;
+	GameModel model;
 	
 	//image[0] is white, image[1] is black
 	private BufferedImage[] imageKing = new BufferedImage[2];
@@ -37,9 +37,9 @@ public class ChessView extends JPanel implements Observer {
 	
 	private class MouseController extends MouseAdapter{
 		
-		ChessModel model;
+		GameModel model;
 		
-		public MouseController(ChessModel m){
+		public MouseController(GameModel m){
 			this.model = m;
 		}
 		
@@ -58,7 +58,7 @@ public class ChessView extends JPanel implements Observer {
 	    }
 	}
 	
-	public ChessView(ChessModel m){
+	public ChessView(GameModel m){
 		
 		setBackground(Color.WHITE);
 		

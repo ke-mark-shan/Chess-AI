@@ -12,7 +12,7 @@ import java.awt.geom.Rectangle2D;
 import javax.swing.*;
 
 public class Main extends JPanel{	
-	ChessModel model;
+	GameModel model;
 	ChessView chessView;
 	
 	private class ResizeListener extends ComponentAdapter {
@@ -27,7 +27,7 @@ public class Main extends JPanel{
 	Main() {
 		
         // Set up MVC
-		model = new ChessModel(new Player(PlayerColour.WHITE), new Player(PlayerColour.BLACK));
+		model = new GameModel(new Player(PlayerColour.WHITE), new Player(PlayerColour.BLACK));
 		chessView = new ChessView(model);
 				
         // layout the views

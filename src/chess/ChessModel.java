@@ -8,14 +8,11 @@ public class ChessModel extends Observable{
 	private Player playerWhite;
 	private Player playerBlack;
 	private ChessBoard chessBoard;
-	private Rectangle2D boardDimensions;
 	private PlayerColour turn;
 	private Position selectedPos;
 	private ArrayList<Position> highlightedPos;	// Highlighted positions
 	
 	public ChessModel(Player p1, Player p2){
-		
-		boardDimensions = new Rectangle2D.Double(0,0,0,0);
 		this.initializeBoard(p1, p2);
 	}
 	
@@ -35,18 +32,6 @@ public class ChessModel extends Observable{
 	
 	public ChessBoard getBoard(){
 		return this.chessBoard;
-	}
-	
-	public Rectangle2D getBoardSize(){
-		return boardDimensions;
-	}
-	
-	public void setBoardSize(double w, double h){
-		
-		// The game board will the largest square that could fit within the window
-		double boardWidth = Math.min(w,h);
-		boardDimensions = new Rectangle2D.Double(0, 0, boardWidth, boardWidth);
-		setChangedAndNotify();
 	}
 	
 	public PlayerColour getTurn(){
