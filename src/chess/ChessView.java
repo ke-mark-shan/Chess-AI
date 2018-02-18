@@ -20,6 +20,10 @@ import java.util.Observer;
 
 public class ChessView extends JPanel implements Observer {
 
+	final static Color SELECTED_COLOUR = Color.BLUE;
+	final static Color HIGHLIGHTED_COLOUR = new Color(144, 238, 144);
+    final static Color[] tileColours = new Color[2];
+    
 	ChessModel model;
 	
 	//image[0] is white, image[1] is black
@@ -62,6 +66,9 @@ public class ChessView extends JPanel implements Observer {
 		this.model = m;
 		this.model.addObserver(this);
 		this.addMouseListener(new MouseController(m));
+		
+		this.tileColours[0] = new Color(111,115,210);
+	    this.tileColours[1] = new Color(157,172,255);
 		//Get the chess piece images
 		try {
 			imageKing[0] = ImageIO.read(new File("resources/King_White.png"));
@@ -83,81 +90,73 @@ public class ChessView extends JPanel implements Observer {
 		}
 	}
 	
+	private BufferedImage getPieceImage(ChessPieceType type, PlayerColour pc){
+		
+		int pieceType = 0;
+		if (pc == PlayerColour.BLACK){
+			pieceType = 1;
+		}
+		
+		switch (type){
+			case KING:
+				return this.imageKing[pieceType];
+			case QUEEN:
+				return this.imageQueen[pieceType];
+			case ROOK:
+				return this.imageRook[pieceType];
+			case BISHOP:
+				return this.imageBishop[pieceType];
+			case KNIGHT:
+				return this.imageKnight[pieceType];
+			case PAWN:
+				return this.imagePawn[pieceType];
+			default:
+				System.err.println("Unexpected piece type: " + type);
+				return null;
+		}
+	}
+	
+	private void drawCell(Graphics g, int column, int row, int BOARD_SIZE, double CELL_SIZE){
+		
+		Graphics2D g2 = (Graphics2D) g;
+		Position pos = new Position(column, BOARD_SIZE - row - 1);
+		
+		// Fill in cell background
+		g2.setPaint(tileColours[(column + row) % 2]);
+		g2.fill(new Rectangle2D.Double(CELL_SIZE * column, CELL_SIZE * row, CELL_SIZE,CELL_SIZE));
+		
+		// Draw chess piece if there is one
+		ChessPiece piece = this.model.getBoard().getPiece(pos);
+		if (null != piece){
+			g.drawImage(this.getPieceImage(piece.getType(), piece.getPlayerColour()), (int) CELL_SIZE * column, (int) CELL_SIZE * row, (int) CELL_SIZE, (int) CELL_SIZE, null);
+		}
+		
+		switch (this.model.getBoard().getState(pos)){
+			case DEFAULT:
+				break;
+			case INCHECK:
+				break;
+			case HIGHLIGHTED:
+				final double CIRCLE_DIAMETER = 0.3 * CELL_SIZE; 
+				g2.setPaint(HIGHLIGHTED_COLOUR);
+				g2.fillOval((int)(CELL_SIZE * (column + 0.5) - CIRCLE_DIAMETER / 2), (int)(CELL_SIZE * (row + 0.5) - CIRCLE_DIAMETER / 2), (int)CIRCLE_DIAMETER, (int)CIRCLE_DIAMETER);
+				break;
+			default:
+				System.err.println("Unexpected state (" + column + ", " + row +"): " + this.model.getBoard().getState(pos));
+		}
+					
+	}
+	
 	public void paintComponent(Graphics g) {
    	 	super.paintComponent(g);
    	 	
    	 	final int BOARD_SIZE = this.model.getBoard().getBoardSize();
    	 	final double CELL_SIZE = this.model.getBoardSize().getWidth() / BOARD_SIZE;
- 
-   	 	final Color SELECTED_COLOUR = Color.BLUE;
-   	 	final Color HIGHLIGHTED_COLOUR = new Color(144, 238, 144);//new Color(255, 255, 204);
-        Color[] tileColours = new Color[2];
-        tileColours[0] = new Color(111,115,210);
-        tileColours[1] = new Color(157,172,255);
-        
-        Graphics2D g2 = (Graphics2D) g; 
-        
-        //draw board
-        g2.setPaint(Color.BLACK);
-        g2.fill(model.getBoardSize());
+
         
         for (int column = 0; column < BOARD_SIZE; column++){
 			for (int row = 0; row < BOARD_SIZE; row++){
-				Position pos = new Position(column, BOARD_SIZE - row - 1);
-				
-				// Fill in cell background
-				g2.setPaint(tileColours[(column + row) % 2]);
-				g2.fill(new Rectangle2D.Double(CELL_SIZE * column, CELL_SIZE * row, CELL_SIZE,CELL_SIZE));
-				
-				// Draw chess piece if there is one
-				ChessPiece piece = this.model.getBoard().getPiece(pos);
-				if (null != piece){
-					int pieceType = 0;
-					if (piece.getPlayerColour() == PlayerColour.BLACK){
-						pieceType = 1;
-					}
-					
-					BufferedImage pieceImage = this.imageKing[pieceType];
-					
-					switch (piece.getType()){
-						case KING:
-							break;
-						case QUEEN:
-							pieceImage = this.imageQueen[pieceType];
-							break;
-						case ROOK:
-							pieceImage = this.imageRook[pieceType];
-							break;
-						case BISHOP:
-							pieceImage = this.imageBishop[pieceType];
-							break;
-						case KNIGHT:
-							pieceImage = this.imageKnight[pieceType];
-							break;
-						case PAWN:
-							pieceImage = this.imagePawn[pieceType];
-							break;
-						default:
-							System.err.println("Unexpected piece type (" + column + ", " + row +"): " + piece.getType());
-				
-					}
-					
-					g.drawImage(pieceImage, (int) CELL_SIZE * column, (int) CELL_SIZE * row, (int) CELL_SIZE, (int) CELL_SIZE, null);
-				}
-				switch (this.model.getBoard().getState(pos)){
-					case DEFAULT:
-						break;
-					case SELECTED:
-						break;
-					case HIGHLIGHTED:
-						final double CIRCLE_DIAMETER = 0.3 * CELL_SIZE; 
-						g2.setPaint(HIGHLIGHTED_COLOUR);
-						g2.fillOval((int)(CELL_SIZE * (column + 0.5) - CIRCLE_DIAMETER / 2), (int)(CELL_SIZE * (row + 0.5) - CIRCLE_DIAMETER / 2), (int)CIRCLE_DIAMETER, (int)CIRCLE_DIAMETER);
-						break;
-					default:
-						System.err.println("Unexpected state (" + column + ", " + row +"): " + this.model.getBoard().getState(pos));
-				}
-							
+				this.drawCell(g, column, row, BOARD_SIZE, CELL_SIZE);
 			}
 		}
 	}
