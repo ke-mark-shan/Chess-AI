@@ -27,14 +27,14 @@ public class KnightGetMoves extends ChessTestBase {
 		System.out.println("--Knight Tests: Done--");
 	}
 
-	//Tests all Knight moves without attacks
+	//Tests all Knight blocked moves without attacks
 	public void allMovements(){
 		System.out.println("allMovements: Start");
-		super.reset();
+		this.reset();
 		
-		Knight testKnight = new Knight(super.getModel(), PlayerColour.WHITE, new Position(3,4));
+		Knight testKnight = new Knight(this.model, PlayerColour.WHITE, new Position(3,4));
 		ArrayList<Position> testMoves;
-		super.getModel().addPiece(testKnight);
+		this.model.addPiece(testKnight);
 		testMoves = testKnight.getPossibleMoves();
 		
 		ArrayList<Position> expectedMoves = new ArrayList<Position>();
@@ -56,11 +56,11 @@ public class KnightGetMoves extends ChessTestBase {
 	//Tests Knight moves that may be outside the board
 	public void boundaries(){
 		System.out.println("boundaries: Start");
-		super.reset();
+		this.reset();
 		
-		Knight testKnight = new Knight(super.getModel(), PlayerColour.WHITE, new Position(0,0));
+		Knight testKnight = new Knight(this.model, PlayerColour.WHITE, new Position(0,0));
 		ArrayList<Position> testMoves;
-		super.getModel().addPiece(testKnight);
+		this.model.addPiece(testKnight);
 		testMoves = testKnight.getPossibleMoves();
 		
 		ArrayList<Position> expectedMoves = new ArrayList<Position>();
@@ -72,14 +72,14 @@ public class KnightGetMoves extends ChessTestBase {
 		System.out.println("boundaries: Done");
 	}
 
-	//Tests Knight blocked moves and attacks
+	//Tests Knight moves and attacks
 	public void moveAndAttacks(){
 		System.out.println("moveAndAttacks: Start");
-		super.reset();
+		this.reset();
 			
-		Knight testKnight = new Knight(super.getModel(), PlayerColour.WHITE, new Position(3,4));
+		Knight testKnight = new Knight(this.model, PlayerColour.WHITE, new Position(3,4));
 		ArrayList<Position> testMoves;
-		super.getModel().addPiece(testKnight);
+		this.model.addPiece(testKnight);
 		
 		ArrayList<Position> expectedMoves = new ArrayList<Position>();
 		
@@ -92,15 +92,15 @@ public class KnightGetMoves extends ChessTestBase {
 		expectedMoves.add(new Position(2,2));
 		expectedMoves.add(new Position(4,2));
 		
-		Pawn testTarget1 = new Pawn(super.getModel(), PlayerColour.BLACK, new Position(2,6));
+		Pawn testTarget1 = new Pawn(this.model, PlayerColour.BLACK, new Position(2,6));
 
-		Pawn testBlocker1 = new Pawn(super.getModel(), PlayerColour.WHITE, new Position(5,3));
+		Pawn testBlocker1 = new Pawn(this.model, PlayerColour.WHITE, new Position(5,3));
 		
-		Pawn testTarget2 = new Pawn(super.getModel(), PlayerColour.BLACK, new Position(1,3));
+		Pawn testTarget2 = new Pawn(this.model, PlayerColour.BLACK, new Position(1,3));
 				
-		this.getModel().addPiece(testTarget1);
-		this.getModel().addPiece(testTarget2);
-		this.getModel().addPiece(testBlocker1);
+		this.model.addPiece(testTarget1);
+		this.model.addPiece(testTarget2);
+		this.model.addPiece(testBlocker1);
 		testMoves = testKnight.getPossibleMoves();
 		
 		this.compareMoves(expectedMoves, testMoves);
@@ -112,13 +112,13 @@ public class KnightGetMoves extends ChessTestBase {
 		System.out.println("moveAndInCheck: Start");
 		this.reset();
 			
-		Knight testKnight = new Knight(this.getModel(), PlayerColour.WHITE, new Position(2,0));
+		Knight testKnight = new Knight(this.model, PlayerColour.WHITE, new Position(2,0));
 		
-		Queen checkQueen = new Queen(this.getModel(), PlayerColour.BLACK, new Position(0,0));
+		Queen checkQueen = new Queen(this.model, PlayerColour.BLACK, new Position(0,0));
 		ArrayList<Position> testMoves;
 		
-		this.getModel().addPiece(testKnight);
-		this.getModel().addPiece(checkQueen);
+		this.model.addPiece(testKnight);
+		this.model.addPiece(checkQueen);
 		
 		testMoves = testKnight.getPossibleMoves();
 		
@@ -133,13 +133,13 @@ public class KnightGetMoves extends ChessTestBase {
 		System.out.println("moveStopCheck: Start");
 		this.reset();
 			
-		Knight testKnight = new Knight(this.getModel(), PlayerColour.WHITE, new Position(2,1));
+		Knight testKnight = new Knight(this.model, PlayerColour.WHITE, new Position(2,1));
 		
-		Queen checkQueen = new Queen(this.getModel(), PlayerColour.BLACK, new Position(0,0));
+		Queen checkQueen = new Queen(this.model, PlayerColour.BLACK, new Position(0,0));
 		ArrayList<Position> testMoves;
 		
-		this.getModel().addPiece(testKnight);
-		this.getModel().addPiece(checkQueen);
+		this.model.addPiece(testKnight);
+		this.model.addPiece(checkQueen);
 		
 		testMoves = testKnight.getPossibleMoves();
 		

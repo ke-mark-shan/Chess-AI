@@ -31,9 +31,9 @@ public class BishopGetMoves extends ChessTestBase {
 		System.out.println("allMovements: Start");
 		this.reset();
 		
-		Bishop testBishop = new Bishop(this.getModel(), PlayerColour.WHITE, new Position(2,4));
+		Bishop testBishop = new Bishop(this.model, PlayerColour.WHITE, new Position(2,4));
 		ArrayList<Position> testMoves;
-		this.getModel().addPiece(testBishop);
+		this.model.addPiece(testBishop);
 		testMoves = testBishop.getPossibleMoves();
 		
 		ArrayList<Position> expectedMoves = new ArrayList<Position>();
@@ -63,19 +63,19 @@ public class BishopGetMoves extends ChessTestBase {
 		System.out.println("moveAndAttacks: Start");
 		this.reset();
 			
-		Bishop testBishop = new Bishop(this.getModel(), PlayerColour.WHITE, new Position(2,4));
+		Bishop testBishop = new Bishop(this.model, PlayerColour.WHITE, new Position(2,4));
 		ArrayList<Position> testMoves;
-		this.getModel().addPiece(testBishop);
+		this.model.addPiece(testBishop);
 		
 		ArrayList<Position> expectedMoves = new ArrayList<Position>();
 		
 		//Down-Left
 		expectedMoves.add(new Position(1,3));
 		expectedMoves.add(new Position(0,2));
-		Pawn testTarget1 = new Pawn(this.getModel(), PlayerColour.BLACK, new Position(0,2));
+		Pawn testTarget1 = new Pawn(this.model, PlayerColour.BLACK, new Position(0,2));
 
 		//Up-Left
-		Pawn testBlocker1 = new Pawn(this.getModel(), PlayerColour.WHITE, new Position(1,5));
+		Pawn testBlocker1 = new Pawn(this.model, PlayerColour.WHITE, new Position(1,5));
 
 		//Up-Right
 		expectedMoves.add(new Position(3,5));
@@ -84,11 +84,11 @@ public class BishopGetMoves extends ChessTestBase {
 		
 		//Down-Right
 		expectedMoves.add(new Position(3,3));
-		Pawn testTarget2 = new Pawn(this.getModel(), PlayerColour.BLACK, new Position(3,3));
+		Pawn testTarget2 = new Pawn(this.model, PlayerColour.BLACK, new Position(3,3));
 		
-		this.getModel().addPiece(testTarget1);
-		this.getModel().addPiece(testTarget2);
-		this.getModel().addPiece(testBlocker1);
+		this.model.addPiece(testTarget1);
+		this.model.addPiece(testTarget2);
+		this.model.addPiece(testBlocker1);
 		testMoves = testBishop.getPossibleMoves();
 		
 		this.compareMoves(expectedMoves, testMoves);
@@ -100,13 +100,13 @@ public class BishopGetMoves extends ChessTestBase {
 		System.out.println("moveAndInCheck: Start");
 		this.reset();
 			
-		Bishop testBishop = new Bishop(this.getModel(), PlayerColour.WHITE, new Position(2,0));
+		Bishop testBishop = new Bishop(this.model, PlayerColour.WHITE, new Position(2,0));
 		
-		Queen checkQueen = new Queen(this.getModel(), PlayerColour.BLACK, new Position(0,0));
+		Queen checkQueen = new Queen(this.model, PlayerColour.BLACK, new Position(0,0));
 		ArrayList<Position> testMoves;
 		
-		this.getModel().addPiece(testBishop);
-		this.getModel().addPiece(checkQueen);
+		this.model.addPiece(testBishop);
+		this.model.addPiece(checkQueen);
 		
 		testMoves = testBishop.getPossibleMoves();
 		
@@ -121,20 +121,20 @@ public class BishopGetMoves extends ChessTestBase {
 		System.out.println("moveStopCheck: Start");
 		this.reset();
 			
-		Bishop testBishop = new Bishop(this.getModel(), PlayerColour.WHITE, new Position(2,1));
+		Bishop testBishop = new Bishop(this.model, PlayerColour.WHITE, new Position(2,1));
 		
-		Queen checkQueen = new Queen(this.getModel(), PlayerColour.BLACK, new Position(0,0));
+		Queen checkQueen = new Queen(this.model, PlayerColour.BLACK, new Position(0,0));
 		ArrayList<Position> testMoves;
 		
-		this.getModel().addPiece(testBishop);
-		this.getModel().addPiece(checkQueen);
+		this.model.addPiece(testBishop);
+		this.model.addPiece(checkQueen);
 		
 		testMoves = testBishop.getPossibleMoves();
 		
 		ArrayList<Position> expectedMoves = new ArrayList<Position>();
 			
-		expectedMoves.add(new Position(1,1));
-		expectedMoves.add(new Position(3,1));
+		expectedMoves.add(new Position(1,0));
+		expectedMoves.add(new Position(3,0));
 		
 		this.compareMoves(expectedMoves, testMoves);
 		System.out.println("moveStopCheck: Done");

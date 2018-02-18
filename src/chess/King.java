@@ -14,13 +14,12 @@ public class King extends ChessPiece{
 		int row = this.getPosition().getSecond();
 
 		ArrayList<Position> moves = new ArrayList<Position>();
-		
-		int[] moveCol = new int[]{-1,1};
-		int[] moveRow = new int[]{-1,1};
-		
-		for (int dCol : moveCol){
-			for (int dRow : moveRow){
+
+		for (int dCol = -1; dCol <= 1; dCol++){
+			for (int dRow = -1; dRow <= 1; dRow++){
+				if (dCol == 0 && dRow == 0) continue;
 				if (this.getModel().inBoard(col + dCol) && this.getModel().inBoard(row + dRow)){
+					
 					Position newPos = new Position(col + dCol, row + dRow);
 					ChessPiece target = this.getModel().getBoard().getPiece(newPos);
 					

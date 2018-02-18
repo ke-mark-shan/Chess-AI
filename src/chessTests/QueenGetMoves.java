@@ -29,11 +29,11 @@ public class QueenGetMoves extends ChessTestBase {
 	//Tests all queen moves without attacks
 	public void allMovements(){
 		System.out.println("allMovements: Start");
-		super.reset();
+		this.reset();
 		
-		Queen testQueen = new Queen(super.getModel(), PlayerColour.WHITE, new Position(2,4));
+		Queen testQueen = new Queen(this.model, PlayerColour.WHITE, new Position(2,4));
 		ArrayList<Position> testMoves;
-		super.getModel().addPiece(testQueen);
+		this.model.addPiece(testQueen);
 		testMoves = testQueen.getPossibleMoves();
 		
 		ArrayList<Position> expectedMoves = new ArrayList<Position>();
@@ -79,21 +79,21 @@ public class QueenGetMoves extends ChessTestBase {
 	//Tests all queen moves and attacks
 	public void moveAndAttacks(){
 		System.out.println("moveAndAttacks: Start");
-		super.reset();
+		this.reset();
 			
-		Queen testQueen = new Queen(super.getModel(), PlayerColour.WHITE, new Position(2,4));
+		Queen testQueen = new Queen(this.model, PlayerColour.WHITE, new Position(2,4));
 		ArrayList<Position> testMoves;
-		super.getModel().addPiece(testQueen);
+		this.model.addPiece(testQueen);
 		
 		ArrayList<Position> expectedMoves = new ArrayList<Position>();
 		
 		//Down-Left
 		expectedMoves.add(new Position(1,3));
 		expectedMoves.add(new Position(0,2));
-		Pawn testTarget1 = new Pawn(super.getModel(), PlayerColour.BLACK, new Position(0,2));
+		Pawn testTarget1 = new Pawn(this.model, PlayerColour.BLACK, new Position(0,2));
 
 		//Left
-		Pawn testBlocker1 = new Pawn(super.getModel(), PlayerColour.WHITE, new Position(1,4));
+		Pawn testBlocker1 = new Pawn(this.model, PlayerColour.WHITE, new Position(1,4));
 		//Up-Left
 		expectedMoves.add(new Position(1,5));
 		expectedMoves.add(new Position(0,6));
@@ -107,7 +107,7 @@ public class QueenGetMoves extends ChessTestBase {
 		expectedMoves.add(new Position(5,7));
 		//Right
 		expectedMoves.add(new Position(3,4));
-		Pawn testTarget2 = new Pawn(super.getModel(), PlayerColour.BLACK, new Position(3,4));
+		Pawn testTarget2 = new Pawn(this.model, PlayerColour.BLACK, new Position(3,4));
 		//Down-Right
 		expectedMoves.add(new Position(3,3));
 		expectedMoves.add(new Position(4,2));
@@ -119,9 +119,9 @@ public class QueenGetMoves extends ChessTestBase {
 		expectedMoves.add(new Position(2,1));
 		expectedMoves.add(new Position(2,0));
 		
-		this.getModel().addPiece(testTarget1);
-		this.getModel().addPiece(testTarget2);
-		this.getModel().addPiece(testBlocker1);
+		this.model.addPiece(testTarget1);
+		this.model.addPiece(testTarget2);
+		this.model.addPiece(testBlocker1);
 		testMoves = testQueen.getPossibleMoves();
 		
 		this.compareMoves(expectedMoves, testMoves);
@@ -133,13 +133,13 @@ public class QueenGetMoves extends ChessTestBase {
 		System.out.println("moveAndInCheck: Start");
 		this.reset();
 			
-		Queen testQueen = new Queen(this.getModel(), PlayerColour.WHITE, new Position(2,0));
+		Queen testQueen = new Queen(this.model, PlayerColour.WHITE, new Position(2,0));
 		
-		Queen checkQueen = new Queen(this.getModel(), PlayerColour.BLACK, new Position(0,0));
+		Queen checkQueen = new Queen(this.model, PlayerColour.BLACK, new Position(0,0));
 		ArrayList<Position> testMoves;
 		
-		this.getModel().addPiece(testQueen);
-		this.getModel().addPiece(checkQueen);
+		this.model.addPiece(testQueen);
+		this.model.addPiece(checkQueen);
 		
 		testMoves = testQueen.getPossibleMoves();
 		
@@ -160,19 +160,19 @@ public class QueenGetMoves extends ChessTestBase {
 		System.out.println("moveStopCheck: Start");
 		this.reset();
 			
-		Queen testQueen = new Queen(this.getModel(), PlayerColour.WHITE, new Position(2,1));
+		Queen testQueen = new Queen(this.model, PlayerColour.WHITE, new Position(2,1));
 		
-		Queen checkQueen = new Queen(this.getModel(), PlayerColour.BLACK, new Position(0,0));
+		Queen checkQueen = new Queen(this.model, PlayerColour.BLACK, new Position(0,0));
 		ArrayList<Position> testMoves;
 		
-		this.getModel().addPiece(testQueen);
-		this.getModel().addPiece(checkQueen);
+		this.model.addPiece(testQueen);
+		this.model.addPiece(checkQueen);
 		
 		testMoves = testQueen.getPossibleMoves();
 		
 		ArrayList<Position> expectedMoves = new ArrayList<Position>();
 		for (int c = 1; c <= 3; c++){	
-			expectedMoves.add(new Position(c,1));
+			expectedMoves.add(new Position(c,0));
 		}
 		
 		this.compareMoves(expectedMoves, testMoves);
