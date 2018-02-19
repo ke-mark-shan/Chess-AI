@@ -7,11 +7,11 @@ package chess;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.geom.Rectangle2D;
 
 import javax.swing.*;
 
-public class Main extends JPanel{	
+public class Main extends JPanel{
+	
 	GameModel model;
 	ChessView chessView;
 	
@@ -24,7 +24,7 @@ public class Main extends JPanel{
 	    }
 	}
 	
-	Main() {
+	public Main() {
 		
         // Set up MVC
 		model = new GameModel(new Player(PlayerColour.WHITE), new Player(PlayerColour.BLACK));
@@ -39,6 +39,7 @@ public class Main extends JPanel{
     }
 	
 	public static void main(String[] args) {
+		
         // create the window
         JFrame f = new JFrame("Chess"); 
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

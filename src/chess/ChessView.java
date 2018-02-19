@@ -5,9 +5,7 @@ import javax.swing.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.Rectangle;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -22,6 +20,7 @@ public class ChessView extends JPanel implements Observer {
 
 	final static Color SELECTED_COLOUR = Color.BLUE;
 	final static Color HIGHLIGHTED_COLOUR = new Color(144, 238, 144);
+	final static Color INCHECK_COLOUR = Color.RED;//new Color(144, 238, 144);
     final static Color[] tileColours = new Color[2];
     
 	GameModel model;
@@ -44,6 +43,7 @@ public class ChessView extends JPanel implements Observer {
 		}
 		
 		public void mouseClicked(MouseEvent e) {
+			
 			double x = e.getX();
 			double y = e.getY();
 			
@@ -67,8 +67,9 @@ public class ChessView extends JPanel implements Observer {
 		this.model.addObserver(this);
 		this.addMouseListener(new MouseController(m));
 		
-		this.tileColours[0] = new Color(111,115,210);
-	    this.tileColours[1] = new Color(157,172,255);
+		ChessView.tileColours[0] = new Color(111,115,210);
+	    ChessView.tileColours[1] = new Color(157,172,255);
+	    
 		//Get the chess piece images
 		try {
 			imageKing[0] = ImageIO.read(new File("resources/King_White.png"));
@@ -116,38 +117,54 @@ public class ChessView extends JPanel implements Observer {
 		}
 	}
 	
+	private void drawBorderCell(Graphics2D g2, int column, int row, double CELL_SIZE, Color borderColour, Color cellColour){
+		
+		final double BORDER_WIDTH = 0.1 * CELL_SIZE;
+		
+		g2.setPaint(borderColour);
+		g2.fill(new Rectangle2D.Double(CELL_SIZE * column, CELL_SIZE * row, CELL_SIZE, CELL_SIZE));
+		
+		g2.setPaint(cellColour);
+		g2.fill(new Rectangle2D.Double(CELL_SIZE * column + BORDER_WIDTH, CELL_SIZE * row + BORDER_WIDTH, CELL_SIZE - 2 * BORDER_WIDTH, CELL_SIZE - 2 * BORDER_WIDTH));
+		
+	}
+	
 	private void drawCell(Graphics g, int column, int row, int BOARD_SIZE, double CELL_SIZE){
 		
 		Graphics2D g2 = (Graphics2D) g;
 		Position pos = new Position(column, BOARD_SIZE - row - 1);
+		Color cellColour = ChessView.tileColours[(column + row) % 2];
 		
-		// Fill in cell background
-		g2.setPaint(tileColours[(column + row) % 2]);
-		g2.fill(new Rectangle2D.Double(CELL_SIZE * column, CELL_SIZE * row, CELL_SIZE,CELL_SIZE));
+		//Draw background
+		switch (this.model.getBoard().getState(pos)){
+			case DEFAULT:
+				g2.setPaint(cellColour);
+				g2.fill(new Rectangle2D.Double(CELL_SIZE * column, CELL_SIZE * row, CELL_SIZE, CELL_SIZE));
+				break;
+			case INCHECK:
+				this.drawBorderCell(g2, column, row, CELL_SIZE, ChessView.INCHECK_COLOUR, cellColour);
+				break;
+			case INCHECKMATE:
+				g2.setPaint(ChessView.INCHECK_COLOUR);
+				g2.fill(new Rectangle2D.Double(CELL_SIZE * column, CELL_SIZE * row, CELL_SIZE, CELL_SIZE));
+				break;
+			case HIGHLIGHTED:
+				this.drawBorderCell(g2, column, row, CELL_SIZE, ChessView.HIGHLIGHTED_COLOUR, cellColour);
+				break;
+			default:
+				System.err.println("Unexpected state (" + column + ", " + row +"): " + this.model.getBoard().getState(pos));
+		}
 		
 		// Draw chess piece if there is one
 		ChessPiece piece = this.model.getBoard().getPiece(pos);
 		if (null != piece){
 			g.drawImage(this.getPieceImage(piece.getType(), piece.getPlayerColour()), (int) CELL_SIZE * column, (int) CELL_SIZE * row, (int) CELL_SIZE, (int) CELL_SIZE, null);
 		}
-		
-		switch (this.model.getBoard().getState(pos)){
-			case DEFAULT:
-				break;
-			case INCHECK:
-				break;
-			case HIGHLIGHTED:
-				final double CIRCLE_DIAMETER = 0.3 * CELL_SIZE; 
-				g2.setPaint(HIGHLIGHTED_COLOUR);
-				g2.fillOval((int)(CELL_SIZE * (column + 0.5) - CIRCLE_DIAMETER / 2), (int)(CELL_SIZE * (row + 0.5) - CIRCLE_DIAMETER / 2), (int)CIRCLE_DIAMETER, (int)CIRCLE_DIAMETER);
-				break;
-			default:
-				System.err.println("Unexpected state (" + column + ", " + row +"): " + this.model.getBoard().getState(pos));
-		}
 					
 	}
 	
 	public void paintComponent(Graphics g) {
+		
    	 	super.paintComponent(g);
    	 	
    	 	final int BOARD_SIZE = this.model.getBoard().getBoardSize();

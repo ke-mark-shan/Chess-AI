@@ -7,12 +7,14 @@ public class Pawn extends ChessPiece {
 	private Boolean madeMove;		//Whether the piece has made a prior move
 	
 	public Pawn(ChessModel m, PlayerColour pc, Position pos){
+		
 		super(m, pc, pos, ChessPieceType.PAWN);
 		this.madeMove = false;
 	}
 		
 	@Override
 	public void setPosition(Position p, boolean actualMove){
+		
 		super.setPosition(p, actualMove);
 
 		if (actualMove){

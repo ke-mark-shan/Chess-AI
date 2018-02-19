@@ -3,6 +3,7 @@ package chess;
 import java.util.ArrayList;
 
 public class Player {
+	
 	private PlayerColour myColour;
 	public King king;
 	public Queen queen;

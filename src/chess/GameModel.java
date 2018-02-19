@@ -7,6 +7,7 @@ public class GameModel extends ChessModel {
 	private Rectangle2D boardDimensions;
 	
 	public GameModel(Player p1, Player p2){
+		
 		super(p1,p2);
 		this.boardDimensions = new Rectangle2D.Double(0,0,0,0);
 	}

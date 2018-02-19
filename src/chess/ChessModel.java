@@ -5,6 +5,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Observable;
 public class ChessModel extends Observable{
+	
 	private Player playerWhite;
 	private Player playerBlack;
 	private ChessBoard chessBoard;
@@ -62,10 +63,15 @@ public class ChessModel extends Observable{
 			
 			if (!this.hasPossibleMoves(this.turn)){
 				System.out.println("Checkmate");
+				this.chessBoard.setState(currTurn.king.getPosition(), BoardCellState.INCHECKMATE);
 			}
 		}
 		else{
 			this.chessBoard.setState(currTurn.king.getPosition(), BoardCellState.DEFAULT);
+			
+			if (!this.hasPossibleMoves(this.turn)){
+				System.out.println("Stalemate");
+			}
 		}
 		
 	}
@@ -151,6 +157,7 @@ public class ChessModel extends Observable{
 
 	// Probably should be using contains, seems like I gotta do hashcode as well tho
 	private boolean isHighlightedPos(Position pos){
+		
 		if (this.highlightedPos == null){
 			return true;
 		}
@@ -163,6 +170,7 @@ public class ChessModel extends Observable{
 	}
 	
 	private void unselectPosition(){
+		
 		for (Position hpos : this.highlightedPos){
 			this.chessBoard.setState(hpos, BoardCellState.DEFAULT);
 		}
@@ -212,6 +220,7 @@ public class ChessModel extends Observable{
 	
 	// Returns the first ChessPiece of PlayerColour pc from start going in the direction of (dCol, dRow)
 	private ChessPiece getFirstInDirection(PlayerColour pc, int startCol, int startRow, int dCol, int dRow){
+		
 		if (dCol == 0 && dRow == 0){
 			System.err.println("Both dcol,drow are 0");
 			return null;
@@ -243,6 +252,7 @@ public class ChessModel extends Observable{
 	
 	// Returns whether piece at (myCol, myRow) can be attacked by a pawn on column col
 	public boolean canBeAttackedByPawn(PlayerColour opponent, int myCol, int myRow, int col, int direction){
+		
 		if (this.inBoard(col) && this.inBoard(myRow + direction)){
 			ChessPiece checkPiece = this.chessBoard.getPiece(new Position(col, myRow + direction));
 			
@@ -353,12 +363,12 @@ public class ChessModel extends Observable{
 		Player player = this.getPlayer(pc);
 		
 		// King
-		if (player.king.getPossibleMoves().size() > 0){
+		if (null != player.king && player.king.getPossibleMoves().size() > 0){
 			return true;
 		}
 		
 		// Queen
-		if (player.queen.getPossibleMoves().size() > 0){
+		if (null != player.queen && player.queen.getPossibleMoves().size() > 0){
 			return true;
 		}
 		
@@ -427,6 +437,7 @@ public class ChessModel extends Observable{
 	}
 	
 	public void addPiece(ChessPiece p){
+		
 		this.chessBoard.setPiece(p.getPosition(),p);
 		ChessPieceType type = p.getType();
 		
@@ -455,6 +466,7 @@ public class ChessModel extends Observable{
 	}
 	
 	public void removePiece(ChessPiece p){
+		
 		if (null == p) return;
 		
 		this.chessBoard.setPiece(p.getPosition(),null);
@@ -486,6 +498,7 @@ public class ChessModel extends Observable{
 		
 	// Notify observers of changes
     public void setChangedAndNotify() {
+    	
         setChanged();
 		notifyObservers();
 	}

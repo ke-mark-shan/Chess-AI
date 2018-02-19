@@ -1,6 +1,7 @@
 package chess;
 
 public class Position{
+	
 	private int first;
 	private int second;
 	
@@ -24,6 +25,7 @@ public class Position{
 	}
 	
      public int hashCode() {
+    	 
          final int prime = 31;
          int result = 1;
          result = prime * result + this.first;
@@ -32,6 +34,7 @@ public class Position{
      }
 	 
 	public boolean equals(Object other){
+		
 		if (!(other instanceof Position)) {
 	        return false;
 	    }

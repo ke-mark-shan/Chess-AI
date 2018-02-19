@@ -3,6 +3,7 @@ package chess;
 import java.util.*;
 
 public abstract class ChessPiece {
+	
 	private ChessModel model;
 	private PlayerColour myColour;
 	private Position myPosition;										//(Column,Row)
@@ -10,6 +11,7 @@ public abstract class ChessPiece {
 
 	private ChessPieceType myType;
 	public ChessPiece(ChessModel m, PlayerColour pc, Position pos, ChessPieceType t){
+		
 		this.model = m;
 		this.myColour = pc;
 		this.myPosition = pos;
@@ -56,7 +58,6 @@ public abstract class ChessPiece {
 		
 		int currCol = this.myPosition.getFirst();
 		int currRow = this.myPosition.getSecond();
-		PlayerColour myColour = this.getPlayerColour();
 		ArrayList<Position> moves = new ArrayList<Position>();
 		
 		if (dCol == 0 && dRow == 0){
