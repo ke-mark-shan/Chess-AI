@@ -164,18 +164,18 @@ public class ChessView extends JPanel implements Observer {
 	}
 	
 	public void paintComponent(Graphics g) {
-		
+		System.out.println("Start Drawing");
    	 	super.paintComponent(g);
    	 	
    	 	final int BOARD_SIZE = this.model.getBoard().getBoardSize();
    	 	final double CELL_SIZE = this.model.getBoardSize().getWidth() / BOARD_SIZE;
-
         
         for (int column = 0; column < BOARD_SIZE; column++){
 			for (int row = 0; row < BOARD_SIZE; row++){
 				this.drawCell(g, column, row, BOARD_SIZE, CELL_SIZE);
 			}
 		}
+        System.out.println("Finish Drawing");
 	}
 	
 	@Override
