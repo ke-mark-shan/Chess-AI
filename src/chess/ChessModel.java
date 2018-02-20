@@ -205,11 +205,14 @@ public class ChessModel extends Observable{
 		if (null == piece){
 			return;
 		}
+		
 		if (piece.getPlayerColour() != this.turn){
 			System.out.println("Not their turn");
 			return;
 		}
+		
 		this.selectedPos = pos;
+		this.chessBoard.setState(pos, BoardCellState.SELECTED);
 		
 		this.highlightedPos = piece.getPossibleMoves();
 		for (Position hpos : this.highlightedPos){

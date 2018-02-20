@@ -18,9 +18,9 @@ import java.util.Observer;
 
 public class ChessView extends JPanel implements Observer {
 
-	final static Color SELECTED_COLOUR = Color.BLUE;
-	final static Color HIGHLIGHTED_COLOUR = new Color(144, 238, 144);
-	final static Color INCHECK_COLOUR = Color.RED;//new Color(144, 238, 144);
+	final static Color SELECTED_COLOUR = new Color(117,221,221);//new Color(132,199,208);
+	final static Color HIGHLIGHTED_COLOUR = new Color(117,221,221);
+	final static Color INCHECK_COLOUR = new Color(170,62,152);
     final static Color[] tileColours = new Color[2];
     
 	GameModel model;
@@ -119,7 +119,7 @@ public class ChessView extends JPanel implements Observer {
 	
 	private void drawBorderCell(Graphics2D g2, int column, int row, double CELL_SIZE, Color borderColour, Color cellColour){
 		
-		final double BORDER_WIDTH = 0.1 * CELL_SIZE;
+		final double BORDER_WIDTH = 0.08 * CELL_SIZE;
 		
 		g2.setPaint(borderColour);
 		g2.fill(new Rectangle2D.Double(CELL_SIZE * column, CELL_SIZE * row, CELL_SIZE, CELL_SIZE));
@@ -146,6 +146,10 @@ public class ChessView extends JPanel implements Observer {
 				break;
 			case INCHECKMATE:
 				g2.setPaint(ChessView.INCHECK_COLOUR);
+				g2.fill(new Rectangle2D.Double(CELL_SIZE * column, CELL_SIZE * row, CELL_SIZE, CELL_SIZE));
+				break;
+			case SELECTED:
+				g2.setPaint(ChessView.SELECTED_COLOUR);
 				g2.fill(new Rectangle2D.Double(CELL_SIZE * column, CELL_SIZE * row, CELL_SIZE, CELL_SIZE));
 				break;
 			case HIGHLIGHTED:
