@@ -1,7 +1,3 @@
-/*
- * Chess piece images retrieved from: https://en.wikipedia.org/wiki/User:Cburnett
- */
-
 package chess;
 
 import java.awt.*;
