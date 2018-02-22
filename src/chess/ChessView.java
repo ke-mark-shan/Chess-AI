@@ -49,10 +49,13 @@ public class ChessView extends JPanel implements Observer {
 			
 			if (0 <= x && x < this.model.getBoardSize().getWidth() &&
 					0 <= y && y < this.model.getBoardSize().getHeight()){
+				
 				int BOARD_SIZE = this.model.getBoard().getBoardSize();
 				int col = (int) ( (x * BOARD_SIZE) / this.model.getBoardSize().getWidth());
 				int row = BOARD_SIZE - (int) ( (y * BOARD_SIZE) / this.model.getBoardSize().getHeight()) - 1;
+				
 				System.out.println("Clicked: (" + col + ", " + row + ")");
+				
 				this.model.selectPosition(new Position(col,row));
 			}
 	    }

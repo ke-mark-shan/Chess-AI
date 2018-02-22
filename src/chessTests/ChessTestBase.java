@@ -19,7 +19,7 @@ public class ChessTestBase {
 	
 	protected void reset(){
 		
-		this.model = new ChessModel(new Player(PlayerColour.WHITE), new Player(PlayerColour.BLACK));
+		this.model = new ChessModel(new PlayerHuman(PlayerColour.WHITE), new PlayerHuman(PlayerColour.BLACK));
 		this.clearBoard();
 		this.placeKings();
 	}

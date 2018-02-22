@@ -41,4 +41,8 @@ public class Position{
 		Position otherPosition = (Position) other;
 		return (this.first == otherPosition.getFirst() && this.second == otherPosition.getSecond());
 	}
+	
+	public String toString(){
+		return "( " + this.first + ", " + this.second + ")";
+	}
 }

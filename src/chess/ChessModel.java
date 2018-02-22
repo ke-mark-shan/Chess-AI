@@ -55,24 +55,28 @@ public class ChessModel extends Observable{
 				break;
 		}
 		
-		Player currTurn = this.getPlayer(this.turn);
+		Player currPlayer = this.getPlayer(this.turn);
 
 		if (this.inCheck(this.turn)){
 			System.out.println("Check");
-			this.chessBoard.setState(currTurn.king.getPosition(), BoardCellState.INCHECK);
+			this.chessBoard.setState(currPlayer.king.getPosition(), BoardCellState.INCHECK);
 			
 			if (!this.hasPossibleMoves(this.turn)){
 				System.out.println("Checkmate");
-				this.chessBoard.setState(currTurn.king.getPosition(), BoardCellState.INCHECKMATE);
+				this.chessBoard.setState(currPlayer.king.getPosition(), BoardCellState.INCHECKMATE);
+				return;
 			}
 		}
 		else{
-			this.chessBoard.setState(currTurn.king.getPosition(), BoardCellState.DEFAULT);
+			this.chessBoard.setState(currPlayer.king.getPosition(), BoardCellState.DEFAULT);
 			
 			if (!this.hasPossibleMoves(this.turn)){
 				System.out.println("Stalemate");
+				return;
 			}
 		}
+		
+		currPlayer.startTurn();
 		
 	}
 
@@ -152,6 +156,9 @@ public class ChessModel extends Observable{
 		this.turn = PlayerColour.WHITE;
 		this.selectedPos = null;
 		
+		p1.setModel(this);
+		p2.setModel(this);
+		
 		setChangedAndNotify();
 	}
 
@@ -182,43 +189,51 @@ public class ChessModel extends Observable{
 	// Processes result of clicking a cell
 	public void selectPosition(Position pos){
 		
-		ChessPiece piece = this.chessBoard.getPiece(pos);
+		Player currPlayer = this.getPlayer(this.turn);
 		
-		if (null != this.selectedPos){
-			if (this.selectedPos.equals(pos)){
-				System.out.println("Unselecting Position");
+		if (currPlayer.getPlayerType() == PlayerType.HUMAN){
+			
+			ChessPiece piece = this.chessBoard.getPiece(pos);
+		
+			if (null != this.selectedPos){
+				
+				if (this.selectedPos.equals(pos)){
+					
+					System.out.println("Unselecting Position");
+					this.unselectPosition();
+					this.setChangedAndNotify();
+					return;
+				}
+				else if(this.isHighlightedPos(pos)){
+					
+					currPlayer.makeMove(this.selectedPos, pos);
+					this.unselectPosition();
+					System.out.println("Turn: " + this.turn);
+					this.setChangedAndNotify();
+					return;
+				}
 				this.unselectPosition();
-				this.setChangedAndNotify();
+			}
+			
+			if (null == piece){
 				return;
 			}
-			else if(this.isHighlightedPos(pos)){
-				this.movePiece(this.selectedPos, pos, true);
-				this.unselectPosition();
-				this.swapTurns();
-				System.out.println("Turn: " + this.turn);
-				this.setChangedAndNotify();
+			
+			if (piece.getPlayerColour() != this.turn){
+				System.out.println("Not their turn");
 				return;
 			}
-			this.unselectPosition();
+			
+			this.selectedPos = pos;
+			this.chessBoard.setState(pos, BoardCellState.SELECTED);
+			
+			this.highlightedPos = piece.getPossibleMoves();
+			for (Position hpos : this.highlightedPos){
+				this.chessBoard.setState(hpos, BoardCellState.HIGHLIGHTED);
+			}
+			this.setChangedAndNotify();
 		}
 		
-		if (null == piece){
-			return;
-		}
-		
-		if (piece.getPlayerColour() != this.turn){
-			System.out.println("Not their turn");
-			return;
-		}
-		
-		this.selectedPos = pos;
-		this.chessBoard.setState(pos, BoardCellState.SELECTED);
-		
-		this.highlightedPos = piece.getPossibleMoves();
-		for (Position hpos : this.highlightedPos){
-			this.chessBoard.setState(hpos, BoardCellState.HIGHLIGHTED);
-		}
-		this.setChangedAndNotify();
 	}
 	
 	// Returns the first ChessPiece of PlayerColour pc from start going in the direction of (dCol, dRow)
