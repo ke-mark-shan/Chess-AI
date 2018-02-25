@@ -4,8 +4,19 @@ import java.util.ArrayList;
 
 public class Knight extends ChessPiece{
 	
+	private static double myValue = 30;
+	
 	public Knight(ChessModel m, PlayerColour pc, Position pos){
-		super(m, pc, pos, ChessPieceType.KNIGHT);
+		super(m, pc, pos, ChessPieceType.KNIGHT, Knight.myValue, new double[][]	{	
+																	new double[] {-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0},
+																	new double[] {-4.0, -2.0,  0.0,  0.0,  0.0,  0.0, -2.0, -4.0},
+																	new double[] {-3.0,  0.0,  1.0,  1.5,  1.5,  1.0,  0.0, -3.0},
+																	new double[] {-3.0,  0.5,  1.5,  2.0,  2.0,  1.5,  0.5, -3.0},
+																	new double[] {-3.0,  0.0,  1.5,  2.0,  2.0,  1.5,  0.0, -3.0},
+																	new double[] {-3.0,  0.5,  1.0,  1.5,  1.5,  1.0,  0.5, -3.0},
+																	new double[] {-4.0, -2.0,  0.0,  0.5,  0.5,  0.0, -2.0, -4.0},
+																	new double[] {-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0}
+																});
 	}
 	
 	public ArrayList<Position> getPossibleMoves(){
@@ -47,4 +58,6 @@ public class Knight extends ChessPiece{
 		}
 		return moves;
 	}
+
+	
 }

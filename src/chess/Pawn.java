@@ -5,10 +5,19 @@ import java.util.ArrayList;
 public class Pawn extends ChessPiece {
 	
 	private Boolean madeMove;		//Whether the piece has made a prior move
+	private static double myValue = 10;
 	
 	public Pawn(ChessModel m, PlayerColour pc, Position pos){
-		
-		super(m, pc, pos, ChessPieceType.PAWN);
+		super(m, pc, pos, ChessPieceType.PAWN, Pawn.myValue, new double[][]	{	
+																new double[] {0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0},
+														        new double[] {5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0},
+														        new double[] {1.0,  1.0,  2.0,  3.0,  3.0,  2.0,  1.0,  1.0},
+														        new double[] {0.5,  0.5,  1.0,  2.5,  2.5,  1.0,  0.5,  0.5},
+														        new double[] {0.0,  0.0,  0.0,  2.0,  2.0,  0.0,  0.0,  0.0},
+														        new double[] {0.5, -0.5, -1.0,  0.0,  0.0, -1.0, -0.5,  0.5},
+														        new double[] {0.5,  1.0, 1.0,  -2.0, -2.0,  1.0,  1.0,  0.5},
+														        new double[] {0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0}
+															});
 		this.madeMove = false;
 	}
 		
@@ -68,4 +77,6 @@ public class Pawn extends ChessPiece {
 		
 		return moves;
 	}
+
+	
 }

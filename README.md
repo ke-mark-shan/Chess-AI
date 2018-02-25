@@ -52,6 +52,6 @@ See also the list of [contributors](https://github.com/your/project/contributors
 
 ## Acknowledgments
 
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
+* Minimax algorithm: https://chessprogramming.wikispaces.com/Minimax
+* Piece position values: https://github.com/lhartikk/simple-chess-ai
+* Chess piece images: https://en.wikipedia.org/wiki/User:Cburnett

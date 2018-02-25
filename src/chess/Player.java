@@ -29,11 +29,7 @@ public abstract class Player {
 		this.pawns = new ArrayList<Pawn>();
 	}
 	
-	//Getters and Setters
-	public ChessModel getModel(){
-		return this.myModel;
-	}
-	
+	//Getters and Setters	
 	public void setModel(ChessModel m){
 		this.myModel = m;
 	}
@@ -52,6 +48,43 @@ public abstract class Player {
 	public void makeMove(Position start, Position end) {
 		this.myModel.movePiece(start, end, true);
 		this.myModel.swapTurns();
+	}
+	
+	protected ArrayList<ChessPiece> getAllPieces(){
+		
+		ArrayList<ChessPiece> pieces = new ArrayList<ChessPiece>();
+		
+		// King
+		if (null != this.king){
+			pieces.add(this.king);
+		}
+		
+		// Queen
+		if (null != this.queen){
+			pieces.add(this.queen);
+		}
+		
+		// Rooks
+		for (Rook r : this.rooks){
+			pieces.add(r);
+		}
+		
+		// Bishops
+		for (Bishop b : this.bishops){
+			pieces.add(b);
+		}
+		
+		// Knights
+		for (Knight k : this.knights){
+			pieces.add(k);
+		}
+		
+		// Pawns
+		for (Pawn p : this.pawns){
+			pieces.add(p);
+		}
+		
+		return pieces;
 	}
 	
 }

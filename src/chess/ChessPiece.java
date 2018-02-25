@@ -8,18 +8,34 @@ public abstract class ChessPiece {
 	private PlayerColour myColour;
 	private Position myPosition;										//(Column,Row)
 	private int myDirection;											//Multiplier for forward
-
 	private ChessPieceType myType;
-	public ChessPiece(ChessModel m, PlayerColour pc, Position pos, ChessPieceType t){
+	
+	private double myBaseValue;
+	private double[][] positionValues;
+	
+	private static void reverse(double[][] arr){
+        double[] temp;
+        
+        for (int i = 0; i < arr.length/2; i++){
+            temp = arr[i];
+            arr[i] = arr[arr.length - i - 1];
+            arr[arr.length - i - 1] = temp;
+        }
+    }
+	
+	public ChessPiece(ChessModel m, PlayerColour pc, Position pos, ChessPieceType t, double baseValue, double[][] positionValues){
 		
 		this.model = m;
 		this.myColour = pc;
 		this.myPosition = pos;
 		this.myDirection = 1;
-		this.myType = t;
-		if (this.myColour == PlayerColour.BLACK){
+		this.positionValues = positionValues;
+		if (this.myColour == PlayerColour.BLACK){			
 			this.myDirection = -1;
+			ChessPiece.reverse(this.positionValues);
 		}
+		this.myType = t;
+		this.myBaseValue = baseValue;
 	}
 
 	//Getters and Setters
@@ -42,15 +58,29 @@ public abstract class ChessPiece {
 	public int getDirectionMultiplier(){
 		return this.myDirection;
 	}
+	
 	public ChessPieceType getType(){
 		return this.myType;
 	}
-	// Get all valid moves for this piece
+	
+	public double getBaseValue(){
+		return this.myBaseValue;
+	}
+	
+	public double[][] getPositionValues(){
+		return this.positionValues;
+	}
+	
+	//Get the value of the piece 
+	public double getPieceValue(){
+		return this.myBaseValue + this.positionValues[this.myPosition.getSecond()][this.myPosition.getFirst()];
+	}
+	
+	//Get all valid moves for this piece
 	abstract public ArrayList<Position> getPossibleMoves();
 	
 	//Try moving the piece to new position and see if the owner is in check
 	protected boolean tryMoveCheck(Position newPos){
-		
 		return this.model.tryMoveCheck(this, newPos);
 	}
 	

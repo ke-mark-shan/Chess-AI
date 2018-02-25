@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Observable;
+
 public class ChessModel extends Observable{
 	
 	private Player playerWhite;
@@ -11,7 +12,7 @@ public class ChessModel extends Observable{
 	private ChessBoard chessBoard;
 	private PlayerColour turn;
 	private Position selectedPos;
-	private ArrayList<Position> highlightedPos;	// Highlighted positions
+	private ArrayList<Position> highlightedPos;	
 	
 	public ChessModel(Player p1, Player p2){
 		this.initializeBoard(p1, p2);

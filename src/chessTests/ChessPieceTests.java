@@ -6,7 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ BishopGetMoves.class, KingGetMoves.class, KnightGetMoves.class, PawnGetMoves.class, QueenGetMoves.class,
-		RookGetMoves.class })
+		RookGetMoves.class, PieceValues.class })
 public class ChessPieceTests {
 
 }

@@ -4,10 +4,21 @@ import java.util.ArrayList;
 
 public class Queen extends ChessPiece{
 	
-	public Queen(ChessModel m, PlayerColour pc, Position pos){
-		super(m, pc, pos, ChessPieceType.QUEEN);
-	}
+	private static double myValue = 90;
 	
+	public Queen(ChessModel m, PlayerColour pc, Position pos){
+		super(m, pc, pos, ChessPieceType.QUEEN, Queen.myValue, new double[][] {	
+																	new double[] { -2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0},
+																    new double[] { -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0},
+																    new double[] { -1.0,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -1.0},
+																    new double[] { -0.5,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -0.5},
+																    new double[] {  0.0,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -0.5},
+																    new double[] { -1.0,  0.5,  0.5,  0.5,  0.5,  0.5,  0.0, -1.0},
+																    new double[] { -1.0,  0.0,  0.5,  0.0,  0.0,  0.0,  0.0, -1.0},
+																    new double[] { -2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0}
+																});
+	}
+
 	@Override
 	public ArrayList<Position> getPossibleMoves(){
 
@@ -25,4 +36,7 @@ public class Queen extends ChessPiece{
 		
 		return moves;
 	}
+
+
+	
 }

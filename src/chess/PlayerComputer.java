@@ -22,45 +22,46 @@ class PossibleMove{
 		return moves;
 	}
 }
+
 public class PlayerComputer extends Player {
 	
 	public PlayerComputer(PlayerColour pc) {
 		super(pc, PlayerType.COMPUTER);
 	}
 	
+	//Returns the total value of the board's layout for the owner
+	private double evaluateBoardValue(Player owner){
+		
+		double totalValue = 0;
+		PlayerColour opponentColour = PlayerColour.WHITE;
+		
+		if (owner.getPlayerColour() == PlayerColour.WHITE) {
+			opponentColour = PlayerColour.BLACK;
+		}
+		
+		Player opponent = this.myModel.getPlayer(opponentColour);
+		
+		ArrayList<ChessPiece> ownerPieces = owner.getAllPieces();
+		ArrayList<ChessPiece> opponentPieces = opponent.getAllPieces();
+		
+		for (ChessPiece p : ownerPieces){
+			totalValue += p.getPieceValue();
+		}
+		
+		for (ChessPiece p : opponentPieces){
+			totalValue -= p.getPieceValue();
+		}
+		
+		return totalValue;
+	}
 	
 	private ArrayList<PossibleMove> getAllPossibleMoves(){
 		
 		ArrayList<PossibleMove> moves = new ArrayList<PossibleMove>();
+		ArrayList<ChessPiece> myPieces = this.getAllPieces();
 		
-		// King
-		if (null != this.king){
-			moves.addAll(PossibleMove.convertToPossibleMoves(this.king.getPosition(), this.king.getPossibleMoves()));
-		}
-		
-		// Queen
-		if (null != this.queen){
-			moves.addAll(PossibleMove.convertToPossibleMoves(this.queen.getPosition(), this.queen.getPossibleMoves()));
-		}
-		
-		// Rooks
-		for (Rook r : this.rooks){
-			moves.addAll(PossibleMove.convertToPossibleMoves(r.getPosition(), r.getPossibleMoves()));
-		}
-		
-		// Bishops
-		for (Bishop b : this.bishops){
-			moves.addAll(PossibleMove.convertToPossibleMoves(b.getPosition(), b.getPossibleMoves()));
-		}
-		
-		// Knights
-		for (Knight k : this.knights){
-			moves.addAll(PossibleMove.convertToPossibleMoves(k.getPosition(), k.getPossibleMoves()));
-		}
-		
-		// Pawns
-		for (Pawn p : this.pawns){
-			moves.addAll(PossibleMove.convertToPossibleMoves(p.getPosition(),p.getPossibleMoves()));
+		for (ChessPiece p : myPieces){
+			moves.addAll(PossibleMove.convertToPossibleMoves(p.getPosition(), p.getPossibleMoves()));
 		}
 		
 		return moves;
@@ -71,6 +72,7 @@ public class PlayerComputer extends Player {
 		
 		ArrayList<PossibleMove> possibleMoves = this.getAllPossibleMoves();
 		
+		System.out.println(possibleMoves.size() + " possible moves");
 		for (PossibleMove pm : possibleMoves){
 			System.out.println(pm.from.toString() + " - " + pm.to.toString());
 		}

@@ -4,8 +4,19 @@ import java.util.ArrayList;
 
 public class King extends ChessPiece{
 	
+	private static double myValue = 900;
+	
 	public King(ChessModel m, PlayerColour pc, Position pos){
-		super(m, pc, pos, ChessPieceType.KING);
+		super(m, pc, pos, ChessPieceType.KING, King.myValue, new double[][] {	
+																new double[] {-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
+																new double[] {-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
+																new double[] {-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
+																new double[] {-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0},
+																new double[] {-2.0, -3.0, -3.0, -4.0, -4.0, -3.0, -3.0, -2.0},
+																new double[] {-1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0},
+																new double[] { 2.0,  2.0,  0.0,  0.0,  0.0,  0.0,  2.0,  2.0},
+																new double[] { 2.0,  3.0,  1.0,  0.0,  0.0,  1.0,  3.0,  2.0}
+															});
 	}
 	
 	public ArrayList<Position> getPossibleMoves(){
@@ -32,4 +43,6 @@ public class King extends ChessPiece{
 		}
 		return moves;
 	}
+
+	
 }
