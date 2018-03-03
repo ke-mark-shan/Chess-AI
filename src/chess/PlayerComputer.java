@@ -69,7 +69,6 @@ public class PlayerComputer extends Player {
 	
 	@Override
 	public void startTurn() {
-		
 		ArrayList<PossibleMove> possibleMoves = this.getAllPossibleMoves();
 		
 		System.out.println(possibleMoves.size() + " possible moves");

@@ -9,9 +9,10 @@ public abstract class ChessPiece {
 	private Position myPosition;										//(Column,Row)
 	private int myDirection;											//Multiplier for forward
 	private ChessPieceType myType;
-	
 	private double myBaseValue;
 	private double[][] positionValues;
+	private boolean madeMove;											//Whether the piece has made a prior move
+	private int myFirstRank;
 	
 	private static void reverse(double[][] arr){
         double[] temp;
@@ -30,12 +31,16 @@ public abstract class ChessPiece {
 		this.myPosition = pos;
 		this.myDirection = 1;
 		this.positionValues = positionValues;
+		this.myFirstRank = 0;
 		if (this.myColour == PlayerColour.BLACK){			
 			this.myDirection = -1;
+			this.myFirstRank = this.model.getBoard().getBoardSize() - 1;			
 			ChessPiece.reverse(this.positionValues);
 		}
 		this.myType = t;
 		this.myBaseValue = baseValue;
+		
+		this.madeMove = false;
 	}
 
 	//Getters and Setters
@@ -52,7 +57,12 @@ public abstract class ChessPiece {
 	}
 	
 	public void setPosition(Position p, boolean actualMove){
+		
 		this.myPosition = p;
+		
+		if (actualMove){
+			this.madeMove = true;
+		}
 	}
 	
 	public int getDirectionMultiplier(){
@@ -61,6 +71,14 @@ public abstract class ChessPiece {
 	
 	public ChessPieceType getType(){
 		return this.myType;
+	}
+	
+	public boolean getMadeMove(){
+		return this.madeMove;
+	}
+	
+	public int getFirstRank(){
+		return this.myFirstRank;
 	}
 	
 	public double getBaseValue(){

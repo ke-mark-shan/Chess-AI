@@ -33,7 +33,13 @@ public class ChessView extends JPanel implements Observer {
 	private BufferedImage[] imageRook = new BufferedImage[2];
 	private BufferedImage[] imagePawn = new BufferedImage[2];
 	
-	
+	private class KeyController extends KeyAdapter{
+		GameModel model;
+		
+		public KeyController(GameModel m){
+			this.model = m;
+		}		
+	}
 	private class MouseController extends MouseAdapter{
 		
 		GameModel model;
@@ -64,12 +70,13 @@ public class ChessView extends JPanel implements Observer {
 	public ChessView(GameModel m){
 		
 		setBackground(Color.WHITE);
+		setFocusable(true);
 		
 		//Initialize MVC
 		this.model = m;
 		this.model.addObserver(this);
 		this.addMouseListener(new MouseController(m));
-		
+		this.addKeyListener(new KeyController(m));
 		ChessView.tileColours[0] = new Color(111,115,210);
 	    ChessView.tileColours[1] = new Color(157,172,255);
 	    

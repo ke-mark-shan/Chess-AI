@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Pawn extends ChessPiece {
 	
-	private Boolean madeMove;		//Whether the piece has made a prior move
 	private static double myValue = 10;
 	
 	public Pawn(ChessModel m, PlayerColour pc, Position pos){
@@ -18,18 +17,6 @@ public class Pawn extends ChessPiece {
 														        new double[] {0.5,  1.0, 1.0,  -2.0, -2.0,  1.0,  1.0,  0.5},
 														        new double[] {0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0}
 															});
-		this.madeMove = false;
-	}
-		
-	@Override
-	public void setPosition(Position p, boolean actualMove){
-		
-		super.setPosition(p, actualMove);
-
-		if (actualMove){
-			this.madeMove = true;
-		}
-		
 	}
 	
 	// Returns whether this piece can make a diagonal attack on cell (col, row)
@@ -57,7 +44,7 @@ public class Pawn extends ChessPiece {
 				if (!this.tryMoveCheck(new Position(col, row + direction))){
 					moves.add(new Position(col, row + direction));
 				}
-				if (!this.madeMove &&
+				if (!this.getMadeMove() &&
 					null == this.getModel().getBoard().getPiece(new Position(col, row + 2 * direction)) &&
 					!this.tryMoveCheck(new Position(col, row + 2 * direction))){
 					// Can move 2 cells forward. Will not be out of bounds

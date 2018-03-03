@@ -19,6 +19,54 @@ public class King extends ChessPiece{
 															});
 	}
 	
+	// Castling Rules (Wikipedia):
+	//	1. The king and the chosen rook are on the player's first rank.[3]
+	//	2. Neither the king nor the chosen rook has previously moved.
+	//	3. There are no pieces between the king and the chosen rook.
+	//	4. The king is not currently in check.
+	//	5. The king does not pass through a square that is attacked by an enemy piece.[4]
+	//	6. The king does not end up in check. (True of any legal move.)
+	private boolean canCastleMove(PlayerColour opponentColour, int kingRow, Position potentialRookPos, Position[] betweenPositions, Position[] kingMoves,
+									Position newKingPos, Position newRookPos){
+		
+		ChessModel model = this.getModel();
+		ChessPiece potentialRook = model.getBoard().getPiece(potentialRookPos);
+		
+		if (kingRow == this.getFirstRank() &&														// 1
+			!this.getMadeMove() &&																	// 2
+			!model.inCheck(this.getPlayerColour()) &&												// 4
+			ChessPieceType.ROOK == potentialRook.getType() && !potentialRook.getMadeMove()){		// 2
+			
+			for (int i = 0; i < betweenPositions.length; i++){
+				if (null != model.getBoard().getPiece(betweenPositions[i])){ 						// 3
+					return false;
+				}
+			}
+			
+			for (int i = 0; i < kingMoves.length; i++){
+				if (model.canBeAttackeByEnemy(opponentColour, kingMoves[i])){						// 5
+					return false;
+				}
+			}
+			
+			Position oldKingPos = this.getPosition();
+			Position oldRookPos = potentialRookPos;
+			
+			model.movePiece(oldKingPos, newKingPos, false);
+			model.movePiece(oldRookPos, newRookPos, false);
+			
+			boolean inCheck = model.inCheck(this.getPlayerColour());								// 6
+			
+			// Restore previous board state
+			model.movePiece(newKingPos, oldKingPos, false);
+			model.movePiece(newRookPos, oldRookPos, false);
+			
+			return !inCheck;
+		}
+
+		return false;
+	}
+	
 	public ArrayList<Position> getPossibleMoves(){
 
 		int col = this.getPosition().getFirst();
@@ -40,6 +88,31 @@ public class King extends ChessPiece{
 					}
 				}
 			}
+		}
+		
+		// Castling
+		PlayerColour opponentColour = PlayerColour.BLACK;
+		
+		if (this.getPlayerColour() == PlayerColour.BLACK){
+			opponentColour = PlayerColour.WHITE;
+		}
+		
+		// Left Rook
+		Position[] betweenPositions = new Position[] { new Position(1, row), new Position (2, row), new Position(3, row) };
+		Position[] kingMoves = new Position[] { new Position (2, row), new Position(3, row) };
+		Position newKingPos = new Position(2, row);
+		
+		if (this.canCastleMove(opponentColour, row, new Position(0, row), betweenPositions, kingMoves, newKingPos, new Position(3, row))){
+			moves.add(newKingPos);
+		}
+		
+		// Right Rook
+		betweenPositions = new Position[] { new Position(5, row), new Position (6, row)};
+		kingMoves = new Position[] { new Position (5, row), new Position(6, row) };
+		newKingPos = new Position(6, row);
+		
+		if (this.canCastleMove(opponentColour, row, new Position(0, row), betweenPositions, kingMoves, newKingPos, new Position(5, row))){
+			moves.add(newKingPos);
 		}
 		return moves;
 	}

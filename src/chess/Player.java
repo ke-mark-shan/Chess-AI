@@ -17,10 +17,11 @@ public abstract class Player {
 	public ArrayList<Knight> knights;
 	public ArrayList<Pawn> pawns;
 	
+	//Model has to be set later because Player and Model rely on each other. TODO.
 	public Player(PlayerColour pc, PlayerType pt){
 		this.myColour = pc;
 		this.myType = pt;
-				
+		
 		this.king = null;
 		this.queen = null;
 		this.rooks = new ArrayList<Rook>();
@@ -41,7 +42,7 @@ public abstract class Player {
 	public PlayerType getPlayerType(){
 		return this.myType;
 	}
-	
+
 	//Indicates beginning of this player's turn
 	public abstract void startTurn();
 	
