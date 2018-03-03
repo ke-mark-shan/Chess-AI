@@ -38,7 +38,25 @@ public class ChessView extends JPanel implements Observer {
 		
 		public KeyController(GameModel m){
 			this.model = m;
-		}		
+		}
+		
+		public void keyPressed(KeyEvent e) {
+
+		    int key = e.getKeyCode();
+
+		    System.out.println(key);
+		    if (key == KeyEvent.VK_LEFT) {
+		        System.out.println("Undo");
+		        this.model.undoMove();
+		    }
+
+		    if (key == KeyEvent.VK_RIGHT) {
+		    	System.out.println("Redo");
+		    	this.model.redoMove();
+		    }
+
+		}
+		
 	}
 	private class MouseController extends MouseAdapter{
 		
