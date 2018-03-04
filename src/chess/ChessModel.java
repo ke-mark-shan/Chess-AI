@@ -487,12 +487,13 @@ public class ChessModel extends Observable{
 			this.removePiece(endPiece);
 		}
 		
-		System.out.println("MovePiece: " + start.toString() + end.toString());
+		if (actualMove){
+			System.out.println("MovePiece: " + start.toString() + end.toString());
+		}
 		
 		if (startPiece.getType() == ChessPieceType.KING && !startPiece.getMadeMove()){
 			// Castling
 			if (end.getFirst() - start.getFirst() == 2){
-				System.out.println("Castling to the Right");
 				// Castle to right
 				Position rookStart = new Position(7, startPiece.getFirstRank());
 				Position rookEnd = new Position(5, startPiece.getFirstRank());
@@ -526,7 +527,6 @@ public class ChessModel extends Observable{
 					public void undo() throws CannotUndoException {
 						super.undo();
 						
-						System.out.println("Undo Castling: " + end.toString() + start.toString());
 						// King
 						startPiece.setPosition(start, actualMove);
 						chessBoard.setPiece(start, startPiece);
@@ -587,9 +587,14 @@ public class ChessModel extends Observable{
 						chessBoard.setPiece(rookStart, castlingRook);
 						chessBoard.setPiece(rookEnd, null);
 						setChangedAndNotify();
-						setChangedAndNotify();
 					}
 				};
+			}
+			else
+			{
+				startPiece.setPosition(end, actualMove);
+				this.chessBoard.setPiece(end, startPiece);
+				this.chessBoard.setPiece(start, null);
 			}
 		}
 		else
@@ -598,6 +603,7 @@ public class ChessModel extends Observable{
 			this.chessBoard.setPiece(end, startPiece);
 			this.chessBoard.setPiece(start, null);
 		}
+		
 	
 		this.undoManager.addEdit(undoableEdit);
 		this.setChangedAndNotify();
