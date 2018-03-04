@@ -435,7 +435,7 @@ public class ChessModel extends Observable{
 		
 		boolean inCheck = false;
 		Position oldPos = p.getPosition();
-		ChessPiece removedPiece = this.getBoard().getPiece(newPos);
+//		ChessPiece removedPiece = this.getBoard().getPiece(newPos);
 		
 		this.movePiece(oldPos, newPos, false);
 		inCheck =  this.inCheck(p.getPlayerColour());
@@ -454,14 +454,8 @@ public class ChessModel extends Observable{
 		
 		ChessPiece startPiece = this.chessBoard.getPiece(start);
 		ChessPiece endPiece = this.chessBoard.getPiece(end);
-		UndoableEdit defaultUndoableEdit = new AbstractUndoableEdit() {
-			// capture variables for closure
-			final Position startPos = start;//new Position(start.getFirst(), start.getSecond());
-			final Position endPos = end;    //new Position(end.getFirst(), end.getSecond());
-			
-			//ChessPiece startPiece = chessBoard.getPiece(start);
-			//ChessPiece endPiece = chessBoard.getPiece(end);
-			
+		UndoableEdit undoableEdit = new AbstractUndoableEdit() {
+
 			public void redo() throws CannotRedoException {
 				super.redo();
 				
@@ -469,16 +463,16 @@ public class ChessModel extends Observable{
 					removePiece(endPiece);
 				}
 				
-				System.out.println("Redo: " + startPos.toString() + endPos.toString());
-				startPiece.setPosition(endPos, actualMove);
-				chessBoard.setPiece(endPos, startPiece);
-				chessBoard.setPiece(startPos, null);
+				System.out.println("Redo: " + start.toString() + end.toString());
+				startPiece.setPosition(end, actualMove);
+				chessBoard.setPiece(end, startPiece);
+				chessBoard.setPiece(start, null);
 				setChangedAndNotify();
 			}
 			public void undo() throws CannotUndoException {
 				super.undo();
 				
-				System.out.println("Undo: " + endPos.toString() + startPos.toString());
+				System.out.println("Undo: " + end.toString() + start.toString());
 				startPiece.setPosition(start, actualMove);
 				chessBoard.setPiece(start, startPiece);
 				chessBoard.setPiece(end, null);
@@ -494,24 +488,119 @@ public class ChessModel extends Observable{
 		}
 		
 		System.out.println("MovePiece: " + start.toString() + end.toString());
-		startPiece.setPosition(end, actualMove);
-		this.chessBoard.setPiece(end, startPiece);
-		this.chessBoard.setPiece(start, null);
 		
-		if (startPiece.getType() == ChessPieceType.KING && start.equals(new Position(4, startPiece.getFirstRank()))){
+		if (startPiece.getType() == ChessPieceType.KING && !startPiece.getMadeMove()){
 			// Castling
 			if (end.getFirst() - start.getFirst() == 2){
+				System.out.println("Castling to the Right");
 				// Castle to right
-				//this.movePiece(new Position(7, start.getSecond()), new Position(5, start.getSecond()), actualMove);
+				Position rookStart = new Position(7, startPiece.getFirstRank());
+				Position rookEnd = new Position(5, startPiece.getFirstRank());
+				ChessPiece castlingRook = this.chessBoard.getPiece(rookStart);
+				
+				startPiece.setPosition(end, actualMove);
+				this.chessBoard.setPiece(end, startPiece);
+				this.chessBoard.setPiece(start, null);
+				
+				castlingRook.setPosition(rookEnd, actualMove);
+				this.chessBoard.setPiece(rookEnd, castlingRook);
+				this.chessBoard.setPiece(rookStart, null);
+				
+				undoableEdit = new AbstractUndoableEdit() {
+
+					public void redo() throws CannotRedoException {
+						super.redo();
+						
+						System.out.println("Redo Castling: " + start.toString() + end.toString());
+						// King
+						startPiece.setPosition(end, actualMove);
+						chessBoard.setPiece(end, startPiece);
+						chessBoard.setPiece(start, null);
+						
+						//Rook
+						castlingRook.setPosition(rookEnd, actualMove);
+						chessBoard.setPiece(rookEnd, castlingRook);
+						chessBoard.setPiece(rookStart, null);
+						setChangedAndNotify();
+					}
+					public void undo() throws CannotUndoException {
+						super.undo();
+						
+						System.out.println("Undo Castling: " + end.toString() + start.toString());
+						// King
+						startPiece.setPosition(start, actualMove);
+						chessBoard.setPiece(start, startPiece);
+						chessBoard.setPiece(end, null);
+						
+						//Rook
+						castlingRook.setPosition(rookStart, actualMove);
+						chessBoard.setPiece(rookStart, castlingRook);
+						chessBoard.setPiece(rookEnd, null);
+						setChangedAndNotify();
+						setChangedAndNotify();
+					}
+				};
 			}
 			else if (end.getFirst() - start.getFirst() == -2){
-				// Castle to right
-				//this.movePiece(new Position(0, start.getSecond()), new Position(3, start.getSecond()), actualMove);
+				System.out.println("Castling to the Left");
+				// Castle to left
+				Position rookStart = new Position(0, startPiece.getFirstRank());
+				Position rookEnd = new Position(3, startPiece.getFirstRank());
+				ChessPiece castlingRook = this.chessBoard.getPiece(rookStart);
+				
+				startPiece.setPosition(end, actualMove);
+				this.chessBoard.setPiece(end, startPiece);
+				this.chessBoard.setPiece(start, null);
+				
+				castlingRook.setPosition(rookEnd, actualMove);
+				this.chessBoard.setPiece(rookEnd, castlingRook);
+				this.chessBoard.setPiece(rookStart, null);
+				
+				undoableEdit = new AbstractUndoableEdit() {
+
+					public void redo() throws CannotRedoException {
+						super.redo();
+						
+						System.out.println("Redo Castling: " + start.toString() + end.toString());
+						// King
+						startPiece.setPosition(end, actualMove);
+						chessBoard.setPiece(end, startPiece);
+						chessBoard.setPiece(start, null);
+						
+						//Rook
+						castlingRook.setPosition(rookEnd, actualMove);
+						chessBoard.setPiece(rookEnd, castlingRook);
+						chessBoard.setPiece(rookStart, null);
+						setChangedAndNotify();
+					}
+					public void undo() throws CannotUndoException {
+						super.undo();
+						
+						System.out.println("Undo Castling: " + end.toString() + start.toString());
+						// King
+						startPiece.setPosition(start, actualMove);
+						chessBoard.setPiece(start, startPiece);
+						chessBoard.setPiece(end, null);
+						
+						//Rook
+						castlingRook.setPosition(rookStart, actualMove);
+						chessBoard.setPiece(rookStart, castlingRook);
+						chessBoard.setPiece(rookEnd, null);
+						setChangedAndNotify();
+						setChangedAndNotify();
+					}
+				};
 			}
 		}
+		else
+		{
+			startPiece.setPosition(end, actualMove);
+			this.chessBoard.setPiece(end, startPiece);
+			this.chessBoard.setPiece(start, null);
+		}
 	
-		undoManager.addEdit(defaultUndoableEdit);
-		
+		this.undoManager.addEdit(undoableEdit);
+		this.setChangedAndNotify();
 	}
 	
 	public void addPiece(ChessPiece p){

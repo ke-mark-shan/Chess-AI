@@ -42,24 +42,20 @@ public class King extends ChessPiece{
 					return false;
 				}
 			}
-			
 			for (int i = 0; i < kingMoves.length; i++){
 				if (model.canBeAttackeByEnemy(opponentColour, kingMoves[i])){						// 5
 					return false;
 				}
 			}
-			
 			Position oldKingPos = this.getPosition();
 			Position oldRookPos = potentialRookPos;
 			
 			model.movePiece(oldKingPos, newKingPos, false);
-			model.movePiece(oldRookPos, newRookPos, false);
 			
 			boolean inCheck = model.inCheck(this.getPlayerColour());								// 6
 			
 			// Restore previous board state
-			model.movePiece(newKingPos, oldKingPos, false);
-			model.movePiece(newRookPos, oldRookPos, false);
+			model.undoMove();
 			
 			return !inCheck;
 		}
@@ -96,7 +92,6 @@ public class King extends ChessPiece{
 		if (this.getPlayerColour() == PlayerColour.BLACK){
 			opponentColour = PlayerColour.WHITE;
 		}
-		
 		// Left Rook
 		Position[] betweenPositions = new Position[] { new Position(1, row), new Position (2, row), new Position(3, row) };
 		Position[] kingMoves = new Position[] { new Position (2, row), new Position(3, row) };
@@ -105,7 +100,6 @@ public class King extends ChessPiece{
 		if (this.canCastleMove(opponentColour, row, new Position(0, row), betweenPositions, kingMoves, newKingPos, new Position(3, row))){
 			moves.add(newKingPos);
 		}
-		
 		// Right Rook
 		betweenPositions = new Position[] { new Position(5, row), new Position (6, row)};
 		kingMoves = new Position[] { new Position (5, row), new Position(6, row) };
@@ -114,6 +108,7 @@ public class King extends ChessPiece{
 		if (this.canCastleMove(opponentColour, row, new Position(0, row), betweenPositions, kingMoves, newKingPos, new Position(5, row))){
 			moves.add(newKingPos);
 		}
+		
 		return moves;
 	}
 

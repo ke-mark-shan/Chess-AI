@@ -44,14 +44,13 @@ public class ChessView extends JPanel implements Observer {
 
 		    int key = e.getKeyCode();
 
-		    System.out.println(key);
 		    if (key == KeyEvent.VK_LEFT) {
-		        System.out.println("Undo");
+		        System.out.println("View: Undo");
 		        this.model.undoMove();
 		    }
 
 		    if (key == KeyEvent.VK_RIGHT) {
-		    	System.out.println("Redo");
+		    	System.out.println("View Redo");
 		    	this.model.redoMove();
 		    }
 
