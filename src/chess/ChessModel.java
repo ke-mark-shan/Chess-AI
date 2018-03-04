@@ -499,9 +499,9 @@ public class ChessModel extends Observable{
 				Position rookEnd = new Position(5, startPiece.getFirstRank());
 				ChessPiece castlingRook = this.chessBoard.getPiece(rookStart);
 				
-				startPiece.setPosition(end, actualMove);
-				this.chessBoard.setPiece(end, startPiece);
-				this.chessBoard.setPiece(start, null);
+//				startPiece.setPosition(end, actualMove);
+//				this.chessBoard.setPiece(end, startPiece);
+//				this.chessBoard.setPiece(start, null);
 				
 				castlingRook.setPosition(rookEnd, actualMove);
 				this.chessBoard.setPiece(rookEnd, castlingRook);
@@ -548,9 +548,9 @@ public class ChessModel extends Observable{
 				Position rookEnd = new Position(3, startPiece.getFirstRank());
 				ChessPiece castlingRook = this.chessBoard.getPiece(rookStart);
 				
-				startPiece.setPosition(end, actualMove);
-				this.chessBoard.setPiece(end, startPiece);
-				this.chessBoard.setPiece(start, null);
+//				startPiece.setPosition(end, actualMove);
+//				this.chessBoard.setPiece(end, startPiece);
+//				this.chessBoard.setPiece(start, null);
 				
 				castlingRook.setPosition(rookEnd, actualMove);
 				this.chessBoard.setPiece(rookEnd, castlingRook);
@@ -590,19 +590,13 @@ public class ChessModel extends Observable{
 					}
 				};
 			}
-			else
-			{
-				startPiece.setPosition(end, actualMove);
-				this.chessBoard.setPiece(end, startPiece);
-				this.chessBoard.setPiece(start, null);
-			}
+
 		}
-		else
-		{
-			startPiece.setPosition(end, actualMove);
-			this.chessBoard.setPiece(end, startPiece);
-			this.chessBoard.setPiece(start, null);
-		}
+
+		startPiece.setPosition(end, actualMove);
+		this.chessBoard.setPiece(end, startPiece);
+		this.chessBoard.setPiece(start, null);
+		
 		
 	
 		this.undoManager.addEdit(undoableEdit);
