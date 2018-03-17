@@ -435,16 +435,10 @@ public class ChessModel extends Observable{
 		
 		boolean inCheck = false;
 		Position oldPos = p.getPosition();
-//		ChessPiece removedPiece = this.getBoard().getPiece(newPos);
-		
+
 		this.movePiece(oldPos, newPos, false);
 		inCheck =  this.inCheck(p.getPlayerColour());
 		
-//		// Restore previous board state
-//		this.movePiece(newPos, oldPos, false);
-//		if (removedPiece != null){
-//			this.addPiece(removedPiece);
-//		}
 		this.undoManager.undo();
 		return inCheck;
 	}
@@ -454,6 +448,7 @@ public class ChessModel extends Observable{
 		
 		ChessPiece startPiece = this.chessBoard.getPiece(start);
 		ChessPiece endPiece = this.chessBoard.getPiece(end);
+//TODO: clean up undo
 		UndoableEdit undoableEdit = new AbstractUndoableEdit() {
 			
 			public void redo() throws CannotRedoException {
