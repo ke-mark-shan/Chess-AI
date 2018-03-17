@@ -77,6 +77,10 @@ public abstract class ChessPiece {
 		return this.madeMove;
 	}
 	
+	public void setMadeMove(boolean madeMove){
+		this.madeMove = madeMove;
+	}
+	
 	public int getFirstRank(){
 		return this.myFirstRank;
 	}

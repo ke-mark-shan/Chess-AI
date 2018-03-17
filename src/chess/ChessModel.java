@@ -455,7 +455,7 @@ public class ChessModel extends Observable{
 		ChessPiece startPiece = this.chessBoard.getPiece(start);
 		ChessPiece endPiece = this.chessBoard.getPiece(end);
 		UndoableEdit undoableEdit = new AbstractUndoableEdit() {
-
+			
 			public void redo() throws CannotRedoException {
 				super.redo();
 				
@@ -504,11 +504,10 @@ public class ChessModel extends Observable{
 				this.chessBoard.setPiece(rookStart, null);
 				
 				undoableEdit = new AbstractUndoableEdit() {
-
+			
 					public void redo() throws CannotRedoException {
 						super.redo();
 						
-						System.out.println("Redo Castling: " + start.toString() + end.toString());
 						// King
 						startPiece.setPosition(end, actualMove);
 						chessBoard.setPiece(end, startPiece);
@@ -538,8 +537,6 @@ public class ChessModel extends Observable{
 				};
 			}
 			else if (end.getFirst() - start.getFirst() == -2){
-				System.out.println("Castling to the Left");
-				// Castle to left
 				Position rookStart = new Position(0, startPiece.getFirstRank());
 				Position rookEnd = new Position(3, startPiece.getFirstRank());
 				ChessPiece castlingRook = this.chessBoard.getPiece(rookStart);
@@ -553,7 +550,6 @@ public class ChessModel extends Observable{
 					public void redo() throws CannotRedoException {
 						super.redo();
 						
-						System.out.println("Redo Castling: " + start.toString() + end.toString());
 						// King
 						startPiece.setPosition(end, actualMove);
 						chessBoard.setPiece(end, startPiece);
@@ -568,7 +564,6 @@ public class ChessModel extends Observable{
 					public void undo() throws CannotUndoException {
 						super.undo();
 						
-						System.out.println("Undo Castling: " + end.toString() + start.toString());
 						// King
 						startPiece.setPosition(start, actualMove);
 						chessBoard.setPiece(start, startPiece);
