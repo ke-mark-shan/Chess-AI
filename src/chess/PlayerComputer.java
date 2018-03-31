@@ -72,11 +72,25 @@ public class PlayerComputer extends Player {
 		ArrayList<PossibleMove> possibleMoves = this.getAllPossibleMoves();
 		
 		System.out.println(possibleMoves.size() + " possible moves");
+		
+		double bestMoveValue = -1 * Double.MAX_VALUE;
+		PossibleMove bestMoveSoFar = null;
+		
 		for (PossibleMove pm : possibleMoves){
 			System.out.println(pm.from.toString() + " - " + pm.to.toString());
+			
+			this.myModel.movePiece(pm.from, pm.to, false);
+			
+			double thisBoardValue = this.evaluateBoardValue(this);
+			
+			if (thisBoardValue > bestMoveValue){
+				bestMoveSoFar = pm;
+				bestMoveValue = thisBoardValue;
+			}
+			this.myModel.undoMove();
 		}
 		
-		PossibleMove bestMove = possibleMoves.get(0);
+		PossibleMove bestMove = bestMoveSoFar;
 		
 		this.makeMove(bestMove.from, bestMove.to);
 	}

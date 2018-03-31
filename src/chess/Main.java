@@ -23,7 +23,7 @@ public class Main extends JPanel{
 	public Main() {
 		
         // Set up MVC
-		this.model = new GameModel(new PlayerHuman(PlayerColour.WHITE), new PlayerHuman(PlayerColour.BLACK));
+		this.model = new GameModel(new PlayerHuman(PlayerColour.WHITE), new PlayerComputer(PlayerColour.BLACK));
 		this.chessView = new ChessView(model);
 				
         // layout the views
