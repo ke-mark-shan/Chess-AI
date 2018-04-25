@@ -35,6 +35,9 @@ public abstract class Player {
 		this.myModel = m;
 	}
 	
+	public ChessModel getModel(){
+		return this.myModel;
+	}
 	public PlayerColour getPlayerColour(){
 		return this.myColour;
 	}
@@ -88,4 +91,25 @@ public abstract class Player {
 		return pieces;
 	}
 	
+	protected ArrayList<PossibleMove> getAllPossibleMoves(){
+		
+		ArrayList<PossibleMove> moves = new ArrayList<PossibleMove>();
+		ArrayList<ChessPiece> myPieces = this.getAllPieces();
+		
+		for (ChessPiece p : myPieces){
+			moves.addAll(PossibleMove.convertToPossibleMoves(p.getPosition(), p.getPossibleMoves()));
+		}
+		
+		return moves;
+	}
+	
+	protected Player getOpponent() {
+		PlayerColour opponentColour = PlayerColour.WHITE;
+		
+		if (this.getPlayerColour() == PlayerColour.WHITE) {
+			opponentColour = PlayerColour.BLACK;
+		}
+		
+		return this.getModel().getPlayer(opponentColour);
+	}
 }

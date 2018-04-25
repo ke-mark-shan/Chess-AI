@@ -31,11 +31,10 @@ public class King extends ChessPiece{
 		
 		ChessModel model = this.getModel();
 		ChessPiece potentialRook = model.getBoard().getPiece(potentialRookPos);
-		
 		if (kingRow == this.getFirstRank() &&														// 1
 			!this.getMadeMove() &&																	// 2
 			!model.inCheck(this.getPlayerColour()) &&												// 4
-			ChessPieceType.ROOK == potentialRook.getType() && !potentialRook.getMadeMove()){		// 2
+			potentialRook != null && ChessPieceType.ROOK == potentialRook.getType() && !potentialRook.getMadeMove()){		// 2
 			
 			for (int i = 0; i < betweenPositions.length; i++){
 				if (null != model.getBoard().getPiece(betweenPositions[i])){ 						// 3

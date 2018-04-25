@@ -30,16 +30,11 @@ public class PlayerComputer extends Player {
 	}
 	
 	//Returns the total value of the board's layout for the owner
-	private double evaluateBoardValue(Player owner){
+	public static double evaluateBoardValue(Player owner){
 		
 		double totalValue = 0;
-		PlayerColour opponentColour = PlayerColour.WHITE;
-		
-		if (owner.getPlayerColour() == PlayerColour.WHITE) {
-			opponentColour = PlayerColour.BLACK;
-		}
-		
-		Player opponent = this.myModel.getPlayer(opponentColour);
+
+		Player opponent = owner.getOpponent();
 		
 		ArrayList<ChessPiece> ownerPieces = owner.getAllPieces();
 		ArrayList<ChessPiece> opponentPieces = opponent.getAllPieces();
@@ -55,20 +50,7 @@ public class PlayerComputer extends Player {
 		return totalValue;
 	}
 	
-	private ArrayList<PossibleMove> getAllPossibleMoves(){
-		
-		ArrayList<PossibleMove> moves = new ArrayList<PossibleMove>();
-		ArrayList<ChessPiece> myPieces = this.getAllPieces();
-		
-		for (ChessPiece p : myPieces){
-			moves.addAll(PossibleMove.convertToPossibleMoves(p.getPosition(), p.getPossibleMoves()));
-		}
-		
-		return moves;
-	}
-	
-	@Override
-	public void startTurn() {
+	private PossibleMove basicBestMove() {
 		ArrayList<PossibleMove> possibleMoves = this.getAllPossibleMoves();
 		
 		System.out.println(possibleMoves.size() + " possible moves");
@@ -89,9 +71,89 @@ public class PlayerComputer extends Player {
 			}
 			this.myModel.undoMove();
 		}
+		return bestMoveSoFar;
+	}
+	
+	@Override
+	public void startTurn() {
 		
-		PossibleMove bestMove = bestMoveSoFar;
+		PossibleMove bestMove = this.startMinimax(3);
+		
+		// Find the best move 
 		
 		this.makeMove(bestMove.from, bestMove.to);
+	}
+	
+	private PossibleMove startMinimax(int depth) {
+		
+		Player current = this;
+		Player other = this.getOpponent();
+		
+		PossibleMove bestMoveSoFar = null;
+		
+		MinimaxConfig minimaxConfig = new MinimaxConfig(false);
+		
+		ArrayList<PossibleMove> possibleMoves = current.getAllPossibleMoves();
+		double bestValueSoFar = minimaxConfig.getStartingValue();
+		
+		for (PossibleMove pm : possibleMoves){
+			current.getModel().movePiece(pm.from, pm.to, false);
+			
+			double minimaxResult = PlayerComputer.minimax(depth - 1, other, current, true);
+			if (minimaxResult > bestValueSoFar) {
+				bestValueSoFar = minimaxResult;
+				bestMoveSoFar =  pm;
+			}
+			
+			current.getModel().undoMove();
+		}
+		return bestMoveSoFar;
+	}
+	
+	// Could have went for NegaMax, but minimax is more 'general'
+	private static double minimax(int depth, Player current, Player other, boolean minimizing) {
+		if (0 >= depth) return -1 * PlayerComputer.evaluateBoardValue(current);
+		
+		MinimaxConfig minimaxConfig = new MinimaxConfig(minimizing);
+		
+		ArrayList<PossibleMove> possibleMoves = current.getAllPossibleMoves();
+		double bestValueSoFar = minimaxConfig.getStartingValue();
+		
+		for (PossibleMove pm : possibleMoves){
+			current.getModel().movePiece(pm.from, pm.to, false);
+			bestValueSoFar = minimaxConfig.compare(bestValueSoFar, PlayerComputer.minimax(depth - 1, other, current, ! minimizing));
+			current.getModel().undoMove();
+		}
+		return bestValueSoFar;
+	}
+}
+
+// Factoring out the two cases of minimax
+class MinimaxConfig {
+	private final double MIN_START = Double.MAX_VALUE;
+	private final double MAX_START = -1 * Double.MAX_VALUE;
+	
+	private boolean minimizing;
+	private double startingValue;
+	
+	MinimaxConfig(boolean minimizing) {
+		this.minimizing = minimizing;
+		this.startingValue = this.MAX_START;
+		
+		if (minimizing) {
+			this.startingValue = this.MIN_START;
+		}
+	}
+	
+	public double getStartingValue() {
+		return this.startingValue;
+	}
+	
+	// Compares the two parameters based on whether we are minimizing/maximizing
+	public double compare(double leftVal, double rightval) {
+		if (this.minimizing) {
+			return Math.min(leftVal, rightval);
+		}
+		return Math.max(leftVal, rightval);
 	}
 }

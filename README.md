@@ -2,7 +2,7 @@
 
 ### Notes:
 ######	Does not support pawn promotion
-######	Unit tests created using JUnit4
+######	Tests created using JUnit4
 ### Credits:
 ###### Chess piece images retrieved from: https://en.wikipedia.org/wiki/User:Cburnett
 
