@@ -20,10 +20,11 @@ public class Main extends JPanel{
 	    }
 	}
 	
-	public Main() {
+	public Main(Player white, Player black) {
 		
         // Set up MVC
-		this.model = new GameModel(new PlayerHuman(PlayerColour.WHITE), new PlayerComputer(PlayerColour.BLACK));
+		
+		this.model = new GameModel(white, black);
 		this.chessView = new ChessView(model);
 				
         // layout the views
@@ -35,13 +36,16 @@ public class Main extends JPanel{
     }
 	
 	public static void main(String[] args) {
+		Player white = new PlayerHuman(PlayerColour.WHITE);
+		Player black = new PlayerComputer(PlayerColour.BLACK);
 		
         // create the window
         JFrame f = new JFrame("Chess"); 
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setSize(1100, 800); 
-        f.setContentPane(new Main()); 
+        f.setContentPane(new Main(white, black)); 
         f.setVisible(true);
         f.setResizable(false);
+        white.startTurn();
     }
 }

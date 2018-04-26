@@ -195,7 +195,6 @@ public class ChessView extends JPanel implements Observer {
 	}
 	
 	public void paintComponent(Graphics g) {
-		System.out.println("Start Drawing");
    	 	super.paintComponent(g);
    	 	
    	 	final int BOARD_SIZE = this.model.getBoard().getBoardSize();
@@ -206,7 +205,6 @@ public class ChessView extends JPanel implements Observer {
 				this.drawCell(g, column, row, BOARD_SIZE, CELL_SIZE);
 			}
 		}
-        System.out.println("Finish Drawing");
 	}
 	
 	@Override

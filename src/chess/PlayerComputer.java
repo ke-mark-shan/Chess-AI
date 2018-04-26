@@ -112,10 +112,10 @@ public class PlayerComputer extends Player {
 	
 	// Could have went for NegaMax, but minimax is more 'general'
 	private static double minimax(int depth, Player current, Player other, boolean minimizing) {
-		if (0 >= depth) return -1 * PlayerComputer.evaluateBoardValue(current);
-		
 		MinimaxConfig minimaxConfig = new MinimaxConfig(minimizing);
 		
+		if (0 >= depth) return minimaxConfig.getLeafMultiplier() * PlayerComputer.evaluateBoardValue(current);
+				
 		ArrayList<PossibleMove> possibleMoves = current.getAllPossibleMoves();
 		double bestValueSoFar = minimaxConfig.getStartingValue();
 		
@@ -145,6 +145,10 @@ class MinimaxConfig {
 		}
 	}
 	
+	public double getLeafMultiplier() {
+		if (minimizing) return -1.0;
+		return 1.0;
+	}
 	public double getStartingValue() {
 		return this.startingValue;
 	}

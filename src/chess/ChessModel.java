@@ -49,7 +49,7 @@ public class ChessModel extends Observable{
 	}
 	
 	public void swapTurns(){
-		
+		System.out.println("swap turns");
 		switch (this.turn){
 			case WHITE:
 				this.turn = PlayerColour.BLACK;
@@ -458,7 +458,7 @@ public class ChessModel extends Observable{
 					removePiece(endPiece);
 				}
 				
-				System.out.println("Redo: " + start.toString() + end.toString());
+				//System.out.println("Redo: " + start.toString() + end.toString());
 				startPiece.setPosition(end, actualMove);
 				chessBoard.setPiece(end, startPiece);
 				chessBoard.setPiece(start, null);
@@ -467,7 +467,7 @@ public class ChessModel extends Observable{
 			public void undo() throws CannotUndoException {
 				super.undo();
 				
-				System.out.println("Undo: " + end.toString() + start.toString());
+				//System.out.println("Undo: " + end.toString() + start.toString());
 				startPiece.setPosition(start, actualMove);
 				chessBoard.setPiece(start, startPiece);
 				chessBoard.setPiece(end, null);
