@@ -1,4 +1,4 @@
-# Chess-AI
+# Chess
 
 ### Notes:
 ######	Does not support pawn promotion because the primary goal was to learn about heuristics-based AI
